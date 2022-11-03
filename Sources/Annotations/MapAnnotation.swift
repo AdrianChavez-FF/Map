@@ -32,7 +32,8 @@ public protocol MapAnnotation {
     // MARK: Methods
 
     func view(for mapView: MKMapView) -> MKAnnotationView?
-
+    
+    func clusterView(for mapView: MKMapView, clusterAnnotation: MKClusterAnnotation) -> MKAnnotationView?
 }
 
 extension MapAnnotation {
