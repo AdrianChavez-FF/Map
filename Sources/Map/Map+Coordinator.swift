@@ -55,7 +55,7 @@ extension Map {
             updatePointOfInterestFilter(on: mapView, from: view, to: newView)
             updateRegion(on: mapView, from: view, to: newView, animated: animation != nil)
             updateType(on: mapView, from: view, to: newView)
-            updateUserTracking(on: mapView, from: view, to: newView)
+            updateUserTracking(on: mapView, from: view, to: newView, animated: animation != nil)
 
             if let key = context.environment.mapKey {
                 MapRegistry[key] = mapView
@@ -247,11 +247,11 @@ extension Map {
             }
         }
 
-        private func updateUserTracking(on mapView: MKMapView, from previousView: Map?, to newView: Map) {
+        private func updateUserTracking(on mapView: MKMapView, from previousView: Map?, to newView: Map, animated: Bool) {
             if #available(macOS 11, *) {
                 let newTrackingMode = newView.userTrackingMode
                 if newView.usesUserTrackingMode, mapView.userTrackingMode != newTrackingMode {
-                    mapView.userTrackingMode = newTrackingMode
+                    mapView.setUserTrackingMode(newTrackingMode, animated: animated)
                 }
             }
         }
