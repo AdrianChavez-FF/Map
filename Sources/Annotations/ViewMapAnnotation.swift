@@ -41,8 +41,7 @@ public struct ViewMapAnnotation<Content: View, ClusterContent: View>: MapAnnotat
     // MARK: Stored Properties
 
     public let annotation: MKAnnotation
-    let content: Content
-    let selectedContent: Content
+    let content: (Bool) -> Content
     let clusterContent: (Int) -> ClusterContent?
     let clusteringIdentifier: String?
 
@@ -53,13 +52,11 @@ public struct ViewMapAnnotation<Content: View, ClusterContent: View>: MapAnnotat
         title: String? = nil,
         subtitle: String? = nil,
         clusteringIdentifier: String? = nil,
-        @ViewBuilder content: () -> Content,
-        @ViewBuilder selectedContent: () -> Content? = { nil },
+        @ViewBuilder content: @escaping (Bool) -> Content,
         @ViewBuilder clusterContent: @escaping (Int) -> ClusterContent? = { _ in nil }
     ) {
         self.annotation = Annotation(coordinate: coordinate, title: title, subtitle: subtitle)
-        self.content = content()
-        self.selectedContent = selectedContent() ?? content()
+        self.content = content
         self.clusterContent = clusterContent
         self.clusteringIdentifier = clusteringIdentifier
     }
@@ -67,14 +64,12 @@ public struct ViewMapAnnotation<Content: View, ClusterContent: View>: MapAnnotat
     public init(
         annotation: MKAnnotation,
         clusteringIdentifier: String? = nil,
-        @ViewBuilder content: () -> Content,
-        @ViewBuilder selectedContent: () -> Content? = { nil },
+        @ViewBuilder content: @escaping (Bool) -> Content,
         @ViewBuilder clusterContent: @escaping (Int) -> ClusterContent? = { _ in nil }
     ) {
         self.annotation = annotation
         self.clusteringIdentifier = clusteringIdentifier
-        self.content = content()
-        self.selectedContent = selectedContent() ?? content()
+        self.content = content
         self.clusterContent = clusterContent
     }
 
@@ -95,10 +90,11 @@ public struct ViewMapAnnotation<Content: View, ClusterContent: View>: MapAnnotat
             return nil
         }
         
-        return MKMapClusterView(clusterContent: clusterContent,
-                                clusterAnnotation: clusterAnnotation)
+        return MKMapClusterView(
+            clusterContent: clusterContent,
+            clusterAnnotation: clusterAnnotation
+        )
     }
-
 }
 
 #endif

@@ -32,7 +32,7 @@ where AnnotationItems.Element: Identifiable, OverlayItems.Element: Identifiable 
     @Binding var userTrackingMode: MKUserTrackingMode
 
     let annotationItems: AnnotationItems
-    @Binding var selectedItem: AnnotationItems.Element.ID?
+    @Binding var selectedItems: Set<AnnotationItems.Element.ID>
     let annotationContent: (AnnotationItems.Element) -> MapAnnotation
 
     let overlayItems: OverlayItems
@@ -179,7 +179,7 @@ extension Map {
         interactionModes: MapInteractionModes = .all,
         userTrackingMode: Binding<MKUserTrackingMode>? = nil,
         annotationItems: AnnotationItems,
-        selectedItem: Binding<AnnotationItems.Element.ID?> = .constant(.none),
+        selectedItems: Binding<Set<AnnotationItems.Element.ID>> = .constant([]),
         @MapAnnotationBuilder annotationContent: @escaping (AnnotationItems.Element) -> MapAnnotation,
         overlayItems: OverlayItems,
         @MapOverlayBuilder overlayContent: @escaping (OverlayItems.Element) -> MapOverlay
@@ -199,7 +199,7 @@ extension Map {
             self._userTrackingMode = .constant(.none)
         }
         self.annotationItems = annotationItems
-        self._selectedItem = selectedItem
+        self._selectedItems = selectedItems
         self.annotationContent = annotationContent
         self.overlayItems = overlayItems
         self.overlayContent = overlayContent
@@ -213,7 +213,7 @@ extension Map {
         interactionModes: MapInteractionModes = .all,
         userTrackingMode: Binding<MKUserTrackingMode>? = nil,
         annotationItems: AnnotationItems,
-        selectedItem: Binding<AnnotationItems.Element.ID?> = .constant(.none),
+        selectedItems: Binding<Set<AnnotationItems.Element.ID>> = .constant([]),
         @MapAnnotationBuilder annotationContent: @escaping (AnnotationItems.Element) -> MapAnnotation,
         overlayItems: OverlayItems,
         @MapOverlayBuilder overlayContent: @escaping (OverlayItems.Element) -> MapOverlay
@@ -236,7 +236,7 @@ extension Map {
         self.annotationContent = annotationContent
         self.overlayItems = overlayItems
         self.overlayContent = overlayContent
-        self._selectedItem = selectedItem
+        self._selectedItems = selectedItems
     }
 
 }
@@ -383,7 +383,7 @@ extension Map where AnnotationItems == [IdentifiableObject<MKAnnotation>] {
         annotations: [MKAnnotation] = [],
         @MapAnnotationBuilder annotationContent: @escaping (MKAnnotation) -> MapAnnotation = { annotation in
             assertionFailure("Please provide an `annotationContent` closure for the values in `annotations`.")
-            return ViewMapAnnotation<EmptyView, EmptyView>(annotation: annotation) { }
+            return ViewMapAnnotation<EmptyView, EmptyView>(annotation: annotation) { _ in }
         },
         overlayItems: OverlayItems,
         @MapOverlayBuilder overlayContent: @escaping (OverlayItems.Element) -> MapOverlay
@@ -396,7 +396,7 @@ extension Map where AnnotationItems == [IdentifiableObject<MKAnnotation>] {
             interactionModes: interactionModes,
             userTrackingMode: userTrackingMode,
             annotationItems: annotations.map(IdentifiableObject.init),
-            selectedItem: .constant(.none),
+            selectedItems: .constant([]),
             annotationContent: { annotationContent($0.object) },
             overlayItems: overlayItems,
             overlayContent: overlayContent
@@ -413,7 +413,7 @@ extension Map where AnnotationItems == [IdentifiableObject<MKAnnotation>] {
         annotations: [MKAnnotation] = [],
         @MapAnnotationBuilder annotationContent: @escaping (MKAnnotation) -> MapAnnotation = { annotation in
             assertionFailure("Please provide an `annotationContent` closure for the values in `annotations`.")
-            return ViewMapAnnotation<EmptyView, EmptyView>(annotation: annotation) {}
+            return ViewMapAnnotation<EmptyView, EmptyView>(annotation: annotation) { _ in }
         },
         overlayItems: OverlayItems,
         @MapOverlayBuilder overlayContent: @escaping (OverlayItems.Element) -> MapOverlay
@@ -585,7 +585,7 @@ extension Map where OverlayItems == [IdentifiableObject<MKOverlay>] {
         interactionModes: MapInteractionModes = .all,
         userTrackingMode: Binding<MKUserTrackingMode>? = nil,
         annotationItems: AnnotationItems,
-        selectedItem: Binding<AnnotationItems.Element.ID?>,
+        selectedItems: Binding<Set<AnnotationItems.Element.ID>>,
         @MapAnnotationBuilder annotationContent: @escaping (AnnotationItems.Element) -> MapAnnotation,
         overlays: [MKOverlay] = [],
         @MapOverlayBuilder overlayContent: @escaping (MKOverlay) -> MapOverlay = { overlay in
@@ -603,7 +603,7 @@ extension Map where OverlayItems == [IdentifiableObject<MKOverlay>] {
             interactionModes: interactionModes,
             userTrackingMode: userTrackingMode,
             annotationItems: annotationItems,
-            selectedItem: selectedItem,
+            selectedItems: selectedItems,
             annotationContent: annotationContent,
             overlayItems: overlays.map(IdentifiableObject.init),
             overlayContent: { overlayContent($0.object) }
@@ -806,7 +806,7 @@ extension Map
         annotations: [MKAnnotation] = [],
         @MapAnnotationBuilder annotationContent: @escaping (MKAnnotation) -> MapAnnotation = { annotation in
             assertionFailure("Please provide an `annotationContent` closure for the values in `annotations`.")
-            return ViewMapAnnotation<EmptyView, EmptyView>(annotation: annotation) {}
+            return ViewMapAnnotation<EmptyView, EmptyView>(annotation: annotation) { _ in }
         },
         overlays: [MKOverlay] = [],
         @MapOverlayBuilder overlayContent: @escaping (MKOverlay) -> MapOverlay = { overlay in
@@ -824,7 +824,7 @@ extension Map
             interactionModes: interactionModes,
             userTrackingMode: userTrackingMode,
             annotationItems: annotations.map(IdentifiableObject.init),
-            selectedItem: .constant(.none),
+            selectedItems: .constant([]),
             annotationContent: { annotationContent($0.object) },
             overlayItems: overlays.map(IdentifiableObject.init),
             overlayContent: { overlayContent($0.object) }
@@ -841,7 +841,7 @@ extension Map
         annotations: [MKAnnotation] = [],
         @MapAnnotationBuilder annotationContent: @escaping (MKAnnotation) -> MapAnnotation = { annotation in
             assertionFailure("Please provide an `annotationContent` closure for the values in `annotations`.")
-            return ViewMapAnnotation<EmptyView, EmptyView>(annotation: annotation) {}
+            return ViewMapAnnotation<EmptyView, EmptyView>(annotation: annotation) { _ in }
         },
         overlays: [MKOverlay] = [],
         @MapOverlayBuilder overlayContent: @escaping (MKOverlay) -> MapOverlay = { overlay in

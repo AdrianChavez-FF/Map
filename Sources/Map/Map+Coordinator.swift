@@ -198,15 +198,13 @@ extension Map {
         }
         
         private func updateSelectedItem(on mapView: MKMapView, from previousView: Map?, to newView: Map) {
-            // Make sure the selectedItem is changed
-            guard newView.selectedItem != previousView?.selectedItem else { return }
-            
-            // New item is selected
-            if let newSelectedItem = newView.selectedItem,
+            guard newView.selectedItems != previousView?.selectedItems else { return }
+
+            if newView.selectedItems.count == 1,
+               let newSelectedItem = newView.selectedItems.first,
                let mapAnnotation = annotationContentByID[newSelectedItem] {
                 mapView.selectAnnotation(mapAnnotation.annotation, animated: false)
             } else {
-                // No item is selected
                 mapView.selectedAnnotations = []
             }
         }
@@ -327,16 +325,28 @@ extension Map {
         }
         
         public func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+            if let cluster = view.annotation as? MKClusterAnnotation {
+                var ids = [AnnotationItems.Element.ID]()
+                for annotation in cluster.memberAnnotations {
+                    guard let id = annotationContentByID.first(where: { $0.value.annotation === annotation })?.key else {
+                        continue
+                    }
+                    ids.append(id)
+                }
+                self.view?.selectedItems = Set(ids)
+                return
+            }
+
             // Find the item ID of the selected annotation
             guard let id = annotationContentByID.first(where: { $0.value.annotation === view.annotation })?.key else {
                 return
             }
             // Assing the selected item ID to the selectedItem binding
-            self.view?.selectedItem = id
+            self.view?.selectedItems = [id]
         }
         
         public func mapView(_ mapView: MKMapView, didDeselect view: MKAnnotationView) {
-            self.view?.selectedItem = nil
+            self.view?.selectedItems = []
         }
     }
 
