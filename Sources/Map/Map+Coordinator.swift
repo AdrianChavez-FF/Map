@@ -204,7 +204,7 @@ extension Map {
                let newSelectedItem = newView.selectedItems.first,
                let mapAnnotation = annotationContentByID[newSelectedItem] {
                 mapView.selectAnnotation(mapAnnotation.annotation, animated: false)
-            } else {
+            } else if newView.selectedItems.isEmpty {
                 mapView.selectedAnnotations = []
             }
         }
@@ -342,11 +342,15 @@ extension Map {
                 return
             }
             // Assing the selected item ID to the selectedItem binding
-            self.view?.selectedItems = [id]
+            DispatchQueue.main.async {
+                self.view?.selectedItems = [id]
+            }
         }
         
         public func mapView(_ mapView: MKMapView, didDeselect view: MKAnnotationView) {
-            self.view?.selectedItems = []
+            DispatchQueue.main.async {
+                self.view?.selectedItems = []
+            }
         }
     }
 
