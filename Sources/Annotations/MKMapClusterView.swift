@@ -1,8 +1,8 @@
 //
-//  MKMapAnnotationView.swift
+//  MKMapClusterView.swift
 //  Map
 //
-//  Created by Paul Kraft on 23.04.22.
+//  Created by Roman Blum on 04.11.22.
 //
 
 #if !os(watchOS)
@@ -10,30 +10,33 @@
 import MapKit
 import SwiftUI
 
-class MKMapAnnotationView<Content: View, ClusterContent: View>: MKAnnotationView {
+class MKMapClusterView<Content: View, ClusterContent: View>: MKAnnotationView {
 
     // MARK: Stored Properties
 
-    private var controller: NativeHostingController<Content>?
+    private var controller: NativeHostingController<ClusterContent>?
     private var viewMapAnnotation: ViewMapAnnotation<Content, ClusterContent>?
 
     // MARK: Methods
 
-    func setup(for mapAnnotation: ViewMapAnnotation<Content, ClusterContent>) {
-        annotation = mapAnnotation.annotation
+    func setup(for mapAnnotation: ViewMapAnnotation<Content, ClusterContent>, clusterAnnotation: MKClusterAnnotation) {
+        annotation = clusterAnnotation
         self.viewMapAnnotation = mapAnnotation
-        self.clusteringIdentifier = mapAnnotation.clusteringIdentifier
-        self.displayPriority = .defaultLow
+        self.displayPriority = .defaultHigh
         self.collisionMode = .circle
         updateContent(for: self.isSelected)
     }
-    
+
     private func updateContent(for selectedState: Bool) {
-        guard let contentView = viewMapAnnotation?.content else {
+        guard
+            let contentView = viewMapAnnotation?.clusterContent,
+            let memberCount = (annotation as? MKClusterAnnotation)?.memberAnnotations.count,
+            let content = contentView(selectedState, memberCount)
+        else {
             return
         }
         controller?.view.removeFromSuperview()
-        let controller = NativeHostingController(rootView: contentView(selectedState), ignoreSafeArea: true)
+        let controller = NativeHostingController(rootView: content, ignoreSafeArea: true)
         addSubview(controller.view)
         let size = controller.view.intrinsicContentSize
         frame = CGRect(x: 0, y: 0, width: size.width, height: size.height)

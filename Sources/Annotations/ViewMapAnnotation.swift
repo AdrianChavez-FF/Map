@@ -36,13 +36,14 @@ public struct ViewMapAnnotation<Content: View, ClusterContent: View>: MapAnnotat
 
     public static func registerView(on mapView: MKMapView) {
         mapView.register(MKMapAnnotationView<Content, ClusterContent>.self, forAnnotationViewWithReuseIdentifier: reuseIdentifier)
+        mapView.register(MKMapClusterView<Content, ClusterContent>.self, forAnnotationViewWithReuseIdentifier: "customClusterReuseIdentifier")
     }
 
     // MARK: Stored Properties
 
     public let annotation: MKAnnotation
     let content: (Bool) -> Content
-    let clusterContent: (Int) -> ClusterContent?
+    let clusterContent: (Bool, Int) -> ClusterContent?
     let clusteringIdentifier: String?
 
     // MARK: Initialization
@@ -53,7 +54,7 @@ public struct ViewMapAnnotation<Content: View, ClusterContent: View>: MapAnnotat
         subtitle: String? = nil,
         clusteringIdentifier: String? = nil,
         @ViewBuilder content: @escaping (Bool) -> Content,
-        @ViewBuilder clusterContent: @escaping (Int) -> ClusterContent? = { _ in nil }
+        @ViewBuilder clusterContent: @escaping (Bool, Int) -> ClusterContent? = { _, _ in nil }
     ) {
         self.annotation = Annotation(coordinate: coordinate, title: title, subtitle: subtitle)
         self.content = content
@@ -65,7 +66,7 @@ public struct ViewMapAnnotation<Content: View, ClusterContent: View>: MapAnnotat
         annotation: MKAnnotation,
         clusteringIdentifier: String? = nil,
         @ViewBuilder content: @escaping (Bool) -> Content,
-        @ViewBuilder clusterContent: @escaping (Int) -> ClusterContent? = { _ in nil }
+        @ViewBuilder clusterContent: @escaping (Bool, Int) -> ClusterContent? = { _, _ in nil }
     ) {
         self.annotation = annotation
         self.clusteringIdentifier = clusteringIdentifier
@@ -86,14 +87,13 @@ public struct ViewMapAnnotation<Content: View, ClusterContent: View>: MapAnnotat
     }
     
     public func clusterView(for mapView: MKMapView, clusterAnnotation: MKClusterAnnotation) -> MKAnnotationView? {
-        guard let clusterContent = clusterContent(clusterAnnotation.memberAnnotations.count) else {
-            return nil
-        }
-        
-        return MKMapClusterView(
-            clusterContent: clusterContent,
-            clusterAnnotation: clusterAnnotation
-        )
+        let view = mapView.dequeueReusableAnnotationView(
+            withIdentifier: "customClusterReuseIdentifier",
+            for: clusterAnnotation
+        ) as? MKMapClusterView<Content, ClusterContent>
+
+        view?.setup(for: self, clusterAnnotation: clusterAnnotation)
+        return view
     }
 }
 
