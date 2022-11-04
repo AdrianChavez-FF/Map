@@ -49,6 +49,14 @@ class MKMapClusterView<Content: View, ClusterContent: View>: MKAnnotationView {
         updateContent(for: selected)
     }
 
+    override func layoutSubviews() {
+        super.layoutSubviews()
+
+        if let controller = controller {
+            bounds.size = controller.preferredContentSize
+        }
+    }
+
     override func prepareForReuse() {
         super.prepareForReuse()
 
