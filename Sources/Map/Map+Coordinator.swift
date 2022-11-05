@@ -413,9 +413,7 @@ extension Map {
                 )
             }
             self.view?.selectedFeature = MapFeatureAnnotation(
-                coordinate: feature.coordinate,
-                title: feature.title,
-                subtitle: feature.subtitle,
+                annotation: feature,
                 featureType: featureType,
                 iconStyle: iconStyle,
                 pointOfInterestCategory: feature.pointOfInterestCategory

@@ -37,16 +37,18 @@ public struct MapFeatureAnnotation: Equatable {
         public let image: UIImage
     }
 
-    public let coordinate: CLLocationCoordinate2D
-    public let title: String?
-    public let subtitle: String?
+    public let annotation: MKAnnotation?
     public let featureType: FeatureType
     public let iconStyle: IconStyle?
     public let pointOfInterestCategory: MKPointOfInterestCategory?
-}
 
-extension CLLocationCoordinate2D: Equatable {
-    public static func == (lhs: CLLocationCoordinate2D, rhs: CLLocationCoordinate2D) -> Bool {
-        lhs.latitude == rhs.latitude && lhs.longitude == rhs.longitude
+    public static func == (lhs: MapFeatureAnnotation, rhs: MapFeatureAnnotation) -> Bool {
+        lhs.annotation?.coordinate.latitude == rhs.annotation?.coordinate.latitude
+        && lhs.annotation?.coordinate.longitude == rhs.annotation?.coordinate.longitude
+        && lhs.annotation?.title == rhs.annotation?.title
+        && lhs.annotation?.subtitle == rhs.annotation?.subtitle
+        && lhs.featureType == rhs.featureType
+        && lhs.iconStyle == rhs.iconStyle
+        && lhs.pointOfInterestCategory == rhs.pointOfInterestCategory
     }
 }
