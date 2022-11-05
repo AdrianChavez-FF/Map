@@ -330,6 +330,12 @@ extension Map {
         }
 
         public func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+            if #available(iOS 16.0, *) {
+                if let feature = annotation as? MKMapFeatureAnnotation {
+                    self.selectFeature(feature)
+                }
+            }
+
             // Cluster annotation
             if let cluster = annotation as? MKClusterAnnotation,
                let firstAnnotation = cluster.memberAnnotations.first,
@@ -370,8 +376,50 @@ extension Map {
         
         public func mapView(_ mapView: MKMapView, didDeselect view: MKAnnotationView) {
             DispatchQueue.main.async {
-                self.view?.selectedItems = []
+                if mapView.selectedAnnotations.isEmpty {
+                    if #available(iOS 16.0, *) {
+                        self.view?.selectedFeature = nil
+                    }
+                    self.view?.selectedItems = []
+                }
             }
+        }
+
+        public func mapView(_ mapView: MKMapView, didAdd views: [MKAnnotationView]) {
+            if let userLocationView = mapView.view(for: mapView.userLocation) {
+                userLocationView.isEnabled = false
+            }
+        }
+
+        @available(iOS 16.0, *)
+        private func selectFeature(_ feature: MKMapFeatureAnnotation) {
+            var featureType: MapFeatureAnnotation.FeatureType
+            switch feature.featureType {
+            case .pointOfInterest:
+                featureType = .pointOfInterest
+            case .territory:
+                featureType = .territory
+            case .physicalFeature:
+                featureType = .physicalFeature
+            @unknown default:
+                featureType = .pointOfInterest
+            }
+
+            var iconStyle: MapFeatureAnnotation.IconStyle?
+            if let style = feature.iconStyle {
+                iconStyle = MapFeatureAnnotation.IconStyle(
+                    backgroundColor: style.backgroundColor,
+                    image: style.image
+                )
+            }
+            self.view?.selectedFeature = MapFeatureAnnotation(
+                coordinate: feature.coordinate,
+                title: feature.title,
+                subtitle: feature.subtitle,
+                featureType: featureType,
+                iconStyle: iconStyle,
+                pointOfInterestCategory: feature.pointOfInterestCategory
+            )
         }
     }
 

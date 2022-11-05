@@ -39,6 +39,7 @@ where AnnotationItems.Element: Identifiable, OverlayItems.Element: Identifiable 
     let overlayItems: OverlayItems
     let overlayContent: (OverlayItems.Element) -> MapOverlay
 
+    @Binding var selectedFeature: MapFeatureAnnotation?
 }
 
 // MARK: - Initialization
@@ -188,7 +189,8 @@ extension Map {
         selectedItems: Binding<Set<AnnotationItems.Element.ID>> = .constant([]),
         @MapAnnotationBuilder annotationContent: @escaping (AnnotationItems.Element) -> MapAnnotation,
         overlayItems: OverlayItems,
-        @MapOverlayBuilder overlayContent: @escaping (OverlayItems.Element) -> MapOverlay
+        @MapOverlayBuilder overlayContent: @escaping (OverlayItems.Element) -> MapOverlay,
+        selectedFeature: Binding<MapFeatureAnnotation?> = .constant(nil)
     ) {
         self.usesRegion = true
         self._coordinateRegion = coordinateRegion
@@ -210,6 +212,7 @@ extension Map {
         self.annotationContent = annotationContent
         self.overlayItems = overlayItems
         self.overlayContent = overlayContent
+        self._selectedFeature = selectedFeature
     }
 
     public init(
@@ -224,7 +227,8 @@ extension Map {
         selectedItems: Binding<Set<AnnotationItems.Element.ID>> = .constant([]),
         @MapAnnotationBuilder annotationContent: @escaping (AnnotationItems.Element) -> MapAnnotation,
         overlayItems: OverlayItems,
-        @MapOverlayBuilder overlayContent: @escaping (OverlayItems.Element) -> MapOverlay
+        @MapOverlayBuilder overlayContent: @escaping (OverlayItems.Element) -> MapOverlay,
+        selectedFeature: Binding<MapFeatureAnnotation?> = .constant(nil)
     ) {
         self.usesRegion = false
         self._coordinateRegion = .constant(.init())
@@ -246,6 +250,7 @@ extension Map {
         self.overlayItems = overlayItems
         self.overlayContent = overlayContent
         self._selectedItems = selectedItems
+        self._selectedFeature = selectedFeature
     }
 
 }
@@ -396,7 +401,8 @@ extension Map where AnnotationItems == [IdentifiableObject<MKAnnotation>] {
             return ViewMapAnnotation<EmptyView, EmptyView>(annotation: annotation) { _ in }
         },
         overlayItems: OverlayItems,
-        @MapOverlayBuilder overlayContent: @escaping (OverlayItems.Element) -> MapOverlay
+        @MapOverlayBuilder overlayContent: @escaping (OverlayItems.Element) -> MapOverlay,
+        selectedFeature: Binding<MapFeatureAnnotation?> = .constant(nil)
     ) {
         self.init(
             coordinateRegion: coordinateRegion,
@@ -410,7 +416,8 @@ extension Map where AnnotationItems == [IdentifiableObject<MKAnnotation>] {
             selectedItems: .constant([]),
             annotationContent: { annotationContent($0.object) },
             overlayItems: overlayItems,
-            overlayContent: overlayContent
+            overlayContent: overlayContent,
+            selectedFeature: selectedFeature
         )
     }
 
@@ -428,7 +435,8 @@ extension Map where AnnotationItems == [IdentifiableObject<MKAnnotation>] {
             return ViewMapAnnotation<EmptyView, EmptyView>(annotation: annotation) { _ in }
         },
         overlayItems: OverlayItems,
-        @MapOverlayBuilder overlayContent: @escaping (OverlayItems.Element) -> MapOverlay
+        @MapOverlayBuilder overlayContent: @escaping (OverlayItems.Element) -> MapOverlay,
+        selectedFeature: Binding<MapFeatureAnnotation?> = .constant(nil)
     ) {
         self.init(
             mapRect: mapRect,
@@ -441,7 +449,8 @@ extension Map where AnnotationItems == [IdentifiableObject<MKAnnotation>] {
             annotationItems: annotations.map(IdentifiableObject.init),
             annotationContent: { annotationContent($0.object) },
             overlayItems: overlayItems,
-            overlayContent: overlayContent
+            overlayContent: overlayContent,
+            selectedFeature: selectedFeature
         )
 
     }
@@ -607,7 +616,8 @@ extension Map where OverlayItems == [IdentifiableObject<MKOverlay>] {
             return RendererMapOverlay(overlay: overlay) { _, overlay in
                 MKOverlayRenderer(overlay: overlay)
             }
-        }
+        },
+        selectedFeature: Binding<MapFeatureAnnotation?> = .constant(nil)
     ) {
         self.init(
             coordinateRegion: coordinateRegion,
@@ -621,7 +631,8 @@ extension Map where OverlayItems == [IdentifiableObject<MKOverlay>] {
             selectedItems: selectedItems,
             annotationContent: annotationContent,
             overlayItems: overlays.map(IdentifiableObject.init),
-            overlayContent: { overlayContent($0.object) }
+            overlayContent: { overlayContent($0.object) },
+            selectedFeature: selectedFeature
         )
     }
 
@@ -641,7 +652,8 @@ extension Map where OverlayItems == [IdentifiableObject<MKOverlay>] {
             return RendererMapOverlay(overlay: overlay) { _, overlay in
                 MKOverlayRenderer(overlay: overlay)
             }
-        }
+        },
+        selectedFeature: Binding<MapFeatureAnnotation?> = .constant(nil)
     ) {
         self.init(
             mapRect: mapRect,
@@ -654,7 +666,8 @@ extension Map where OverlayItems == [IdentifiableObject<MKOverlay>] {
             annotationItems: annotationItems,
             annotationContent: annotationContent,
             overlayItems: overlays.map(IdentifiableObject.init),
-            overlayContent: { overlayContent($0.object) }
+            overlayContent: { overlayContent($0.object) },
+            selectedFeature: selectedFeature
         )
     }
 
@@ -832,7 +845,8 @@ extension Map
             return RendererMapOverlay(overlay: overlay) { _, overlay in
                 MKOverlayRenderer(overlay: overlay)
             }
-        }
+        },
+        selectedFeature: Binding<MapFeatureAnnotation?> = .constant(nil)
     ) {
         self.init(
             coordinateRegion: coordinateRegion,
@@ -846,7 +860,8 @@ extension Map
             selectedItems: .constant([]),
             annotationContent: { annotationContent($0.object) },
             overlayItems: overlays.map(IdentifiableObject.init),
-            overlayContent: { overlayContent($0.object) }
+            overlayContent: { overlayContent($0.object) },
+            selectedFeature: selectedFeature
         )
     }
 
@@ -869,7 +884,8 @@ extension Map
             return RendererMapOverlay(overlay: overlay) { _, overlay in
                 MKOverlayRenderer(overlay: overlay)
             }
-        }
+        },
+        selectedFeature: Binding<MapFeatureAnnotation?> = .constant(nil)
     ) {
         self.init(
             mapRect: mapRect,
@@ -882,7 +898,8 @@ extension Map
             annotationItems: annotations.map(IdentifiableObject.init),
             annotationContent: { annotationContent($0.object) },
             overlayItems: overlays.map(IdentifiableObject.init),
-            overlayContent: { overlayContent($0.object) }
+            overlayContent: { overlayContent($0.object) },
+            selectedFeature: selectedFeature
         )
     }
 
