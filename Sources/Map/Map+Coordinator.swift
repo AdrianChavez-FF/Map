@@ -49,6 +49,7 @@ extension Map {
             updateAnnotations(on: mapView, from: view, to: newView)
             updateSelectedItem(on: mapView, from: view, to: newView)
             updateCamera(on: mapView, context: context, animated: animation != nil)
+            updateSelectableMapFeatures(on: mapView, from: view, to: newView)
             updateInformationVisibility(on: mapView, from: view, to: newView)
             updateInteractionModes(on: mapView, from: view, to: newView)
             updateOverlays(on: mapView, from: view, to: newView)
@@ -142,6 +143,26 @@ extension Map {
                 mapView.showsPitchControl = newView.informationVisibility.contains(.pitchControl)
             }
             #endif
+        }
+
+        private func updateSelectableMapFeatures(on mapView: MKMapView, from previousView: Map?, to newView: Map) {
+            guard previousView?.selectableMapFeatures != newView.selectableMapFeatures else {
+                return
+            }
+
+            if #available(iOS 16.0, *) {
+                var newFeatures = MKMapFeatureOptions()
+                if newView.selectableMapFeatures.contains(.physicalFeatures) {
+                    newFeatures.insert(.physicalFeatures)
+                }
+                if newView.selectableMapFeatures.contains(.pointsOfInterest) {
+                    newFeatures.insert(.pointsOfInterest)
+                }
+                if newView.selectableMapFeatures.contains(.territories) {
+                    newFeatures.insert(.territories)
+                }
+                mapView.selectableMapFeatures = newFeatures
+            }
         }
 
         private func updateInteractionModes(on mapView: MKMapView, from previousView: Map?, to newView: Map) {

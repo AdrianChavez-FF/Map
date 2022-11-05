@@ -23,6 +23,7 @@ where AnnotationItems.Element: Identifiable, OverlayItems.Element: Identifiable 
     let mapType: MKMapType
     let pointOfInterestFilter: MKPointOfInterestFilter?
 
+    let selectableMapFeatures: MapFeatureOptions
     let informationVisibility: MapInformationVisibility
     let interactionModes: MapInteractionModes
 
@@ -61,6 +62,7 @@ extension Map {
         self._coordinateRegion = coordinateRegion
         self._mapRect = .constant(.init())
         self.mapType = mapType
+        self.selectableMapFeatures = MapFeatureOptions()
         self.pointOfInterestFilter = pointOfInterestFilter
         self.informationVisibility = informationVisibility
         self.interactionModes = interactionModes
@@ -87,6 +89,7 @@ extension Map {
         self._coordinateRegion = .constant(.init())
         self._mapRect = mapRect
         self.mapType = mapType
+        self.selectableMapFeatures = MapFeatureOptions()
         self.pointOfInterestFilter = pointOfInterestFilter
         self.informationVisibility = informationVisibility
         self.interactionModes = interactionModes
@@ -116,6 +119,7 @@ extension Map {
         self._coordinateRegion = coordinateRegion
         self._mapRect = .constant(.init())
         self.mapType = mapType
+        self.selectableMapFeatures = MapFeatureOptions()
         self.pointOfInterestFilter = pointOfInterestFilter
         self.informationVisibility = informationVisibility
         self.interactionModes = interactionModes
@@ -149,6 +153,7 @@ extension Map {
         self._coordinateRegion = .constant(.init())
         self._mapRect = mapRect
         self.mapType = mapType
+        self.selectableMapFeatures = MapFeatureOptions()
         self.pointOfInterestFilter = pointOfInterestFilter
         self.informationVisibility = informationVisibility
         self.interactionModes = interactionModes
@@ -175,6 +180,7 @@ extension Map {
         coordinateRegion: Binding<MKCoordinateRegion>,
         type mapType: MKMapType = .standard,
         pointOfInterestFilter: MKPointOfInterestFilter? = nil,
+        selectableMapFeatures: MapFeatureOptions = .init(),
         informationVisibility: MapInformationVisibility = .default,
         interactionModes: MapInteractionModes = .all,
         userTrackingMode: Binding<MKUserTrackingMode>? = nil,
@@ -189,6 +195,7 @@ extension Map {
         self._mapRect = .constant(.init())
         self.mapType = mapType
         self.pointOfInterestFilter = pointOfInterestFilter
+        self.selectableMapFeatures = selectableMapFeatures
         self.informationVisibility = informationVisibility
         self.interactionModes = interactionModes
         if let userTrackingMode = userTrackingMode {
@@ -209,6 +216,7 @@ extension Map {
         mapRect: Binding<MKMapRect>,
         type mapType: MKMapType = .standard,
         pointOfInterestFilter: MKPointOfInterestFilter? = nil,
+        selectableMapFeatures: MapFeatureOptions = .init(),
         informationVisibility: MapInformationVisibility = .default,
         interactionModes: MapInteractionModes = .all,
         userTrackingMode: Binding<MKUserTrackingMode>? = nil,
@@ -223,6 +231,7 @@ extension Map {
         self._mapRect = mapRect
         self.mapType = mapType
         self.pointOfInterestFilter = pointOfInterestFilter
+        self.selectableMapFeatures = selectableMapFeatures
         self.informationVisibility = informationVisibility
         self.interactionModes = interactionModes
         if let userTrackingMode = userTrackingMode {
@@ -377,6 +386,7 @@ extension Map where AnnotationItems == [IdentifiableObject<MKAnnotation>] {
         coordinateRegion: Binding<MKCoordinateRegion>,
         type mapType: MKMapType = .standard,
         pointOfInterestFilter: MKPointOfInterestFilter? = nil,
+        selectableMapFeatures: MapFeatureOptions = .init(),
         informationVisibility: MapInformationVisibility = .default,
         interactionModes: MapInteractionModes = .all,
         userTrackingMode: Binding<MKUserTrackingMode>? = nil,
@@ -392,6 +402,7 @@ extension Map where AnnotationItems == [IdentifiableObject<MKAnnotation>] {
             coordinateRegion: coordinateRegion,
             type: mapType,
             pointOfInterestFilter: pointOfInterestFilter,
+            selectableMapFeatures: selectableMapFeatures,
             informationVisibility: informationVisibility,
             interactionModes: interactionModes,
             userTrackingMode: userTrackingMode,
@@ -407,6 +418,7 @@ extension Map where AnnotationItems == [IdentifiableObject<MKAnnotation>] {
         mapRect: Binding<MKMapRect>,
         type mapType: MKMapType = .standard,
         pointOfInterestFilter: MKPointOfInterestFilter? = nil,
+        selectableMapFeatures: MapFeatureOptions = .init(),
         informationVisibility: MapInformationVisibility = .default,
         interactionModes: MapInteractionModes = .all,
         userTrackingMode: Binding<MKUserTrackingMode>? = nil,
@@ -422,6 +434,7 @@ extension Map where AnnotationItems == [IdentifiableObject<MKAnnotation>] {
             mapRect: mapRect,
             type: mapType,
             pointOfInterestFilter: pointOfInterestFilter,
+            selectableMapFeatures: selectableMapFeatures,
             informationVisibility: informationVisibility,
             interactionModes: interactionModes,
             userTrackingMode: userTrackingMode,
@@ -581,6 +594,7 @@ extension Map where OverlayItems == [IdentifiableObject<MKOverlay>] {
         coordinateRegion: Binding<MKCoordinateRegion>,
         type mapType: MKMapType = .standard,
         pointOfInterestFilter: MKPointOfInterestFilter? = nil,
+        selectableMapFeatures: MapFeatureOptions = .init(),
         informationVisibility: MapInformationVisibility = .default,
         interactionModes: MapInteractionModes = .all,
         userTrackingMode: Binding<MKUserTrackingMode>? = nil,
@@ -599,6 +613,7 @@ extension Map where OverlayItems == [IdentifiableObject<MKOverlay>] {
             coordinateRegion: coordinateRegion,
             type: mapType,
             pointOfInterestFilter: pointOfInterestFilter,
+            selectableMapFeatures: selectableMapFeatures,
             informationVisibility: informationVisibility,
             interactionModes: interactionModes,
             userTrackingMode: userTrackingMode,
@@ -614,6 +629,7 @@ extension Map where OverlayItems == [IdentifiableObject<MKOverlay>] {
         mapRect: Binding<MKMapRect>,
         type mapType: MKMapType = .standard,
         pointOfInterestFilter: MKPointOfInterestFilter? = nil,
+        selectableMapFeatures: MapFeatureOptions = .init(),
         informationVisibility: MapInformationVisibility = .default,
         interactionModes: MapInteractionModes = .all,
         userTrackingMode: Binding<MKUserTrackingMode>? = nil,
@@ -631,6 +647,7 @@ extension Map where OverlayItems == [IdentifiableObject<MKOverlay>] {
             mapRect: mapRect,
             type: mapType,
             pointOfInterestFilter: pointOfInterestFilter,
+            selectableMapFeatures: selectableMapFeatures,
             informationVisibility: informationVisibility,
             interactionModes: interactionModes,
             userTrackingMode: userTrackingMode,
@@ -800,6 +817,7 @@ extension Map
         coordinateRegion: Binding<MKCoordinateRegion>,
         type mapType: MKMapType = .standard,
         pointOfInterestFilter: MKPointOfInterestFilter? = nil,
+        selectableMapFeatures: MapFeatureOptions = .init(),
         informationVisibility: MapInformationVisibility = .default,
         interactionModes: MapInteractionModes = .all,
         userTrackingMode: Binding<MKUserTrackingMode>? = nil,
@@ -820,6 +838,7 @@ extension Map
             coordinateRegion: coordinateRegion,
             type: mapType,
             pointOfInterestFilter: pointOfInterestFilter,
+            selectableMapFeatures: selectableMapFeatures,
             informationVisibility: informationVisibility,
             interactionModes: interactionModes,
             userTrackingMode: userTrackingMode,
@@ -835,6 +854,7 @@ extension Map
         mapRect: Binding<MKMapRect>,
         type mapType: MKMapType = .standard,
         pointOfInterestFilter: MKPointOfInterestFilter? = nil,
+        selectableMapFeatures: MapFeatureOptions = .init(),
         informationVisibility: MapInformationVisibility = .default,
         interactionModes: MapInteractionModes = .all,
         userTrackingMode: Binding<MKUserTrackingMode>? = nil,
@@ -855,6 +875,7 @@ extension Map
             mapRect: mapRect,
             type: mapType,
             pointOfInterestFilter: pointOfInterestFilter,
+            selectableMapFeatures: selectableMapFeatures,
             informationVisibility: informationVisibility,
             interactionModes: interactionModes,
             userTrackingMode: userTrackingMode,
