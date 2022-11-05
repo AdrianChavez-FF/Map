@@ -36,6 +36,7 @@ class MKMapAnnotationView<Content: View, ClusterContent: View>: MKAnnotationView
         let controller = NativeHostingController(rootView: contentView(selectedState), ignoreSafeArea: true)
         addSubview(controller.view)
         let size = controller.view.intrinsicContentSize
+        controller.view.center = .init(x: size.width / 2, y: size.height / 2)
         frame = CGRect(x: 0, y: 0, width: size.width, height: size.height)
         self.controller = controller
     }
@@ -50,7 +51,7 @@ class MKMapAnnotationView<Content: View, ClusterContent: View>: MKAnnotationView
         super.layoutSubviews()
 
         if let controller = controller {
-            bounds.size = controller.preferredContentSize
+            bounds.size = controller.view.intrinsicContentSize
         }
     }
 
