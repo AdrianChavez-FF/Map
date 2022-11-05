@@ -43,7 +43,7 @@ public struct ViewMapAnnotation<Content: View, ClusterContent: View>: MapAnnotat
 
     public let annotation: MKAnnotation
     let content: (Bool) -> Content
-    let clusterContent: (Bool, Int) -> ClusterContent?
+    let clusterContent: (Bool, [MKAnnotation]) -> ClusterContent?
     let clusteringIdentifier: String?
 
     // MARK: Initialization
@@ -54,7 +54,7 @@ public struct ViewMapAnnotation<Content: View, ClusterContent: View>: MapAnnotat
         subtitle: String? = nil,
         clusteringIdentifier: String? = nil,
         @ViewBuilder content: @escaping (Bool) -> Content,
-        @ViewBuilder clusterContent: @escaping (Bool, Int) -> ClusterContent? = { _, _ in nil }
+        @ViewBuilder clusterContent: @escaping (Bool, [MKAnnotation]) -> ClusterContent? = { _, _ in nil }
     ) {
         self.annotation = Annotation(coordinate: coordinate, title: title, subtitle: subtitle)
         self.content = content
@@ -66,7 +66,7 @@ public struct ViewMapAnnotation<Content: View, ClusterContent: View>: MapAnnotat
         annotation: MKAnnotation,
         clusteringIdentifier: String? = nil,
         @ViewBuilder content: @escaping (Bool) -> Content,
-        @ViewBuilder clusterContent: @escaping (Bool, Int) -> ClusterContent? = { _, _ in nil }
+        @ViewBuilder clusterContent: @escaping (Bool, [MKAnnotation]) -> ClusterContent? = { _, _ in nil }
     ) {
         self.annotation = annotation
         self.clusteringIdentifier = clusteringIdentifier

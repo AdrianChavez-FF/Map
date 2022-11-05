@@ -30,8 +30,8 @@ class MKMapClusterView<Content: View, ClusterContent: View>: MKAnnotationView {
     private func updateContent(for selectedState: Bool) {
         guard
             let contentView = viewMapAnnotation?.clusterContent,
-            let memberCount = (annotation as? MKClusterAnnotation)?.memberAnnotations.count,
-            let content = contentView(selectedState, memberCount)
+            let memberAnnotations = (annotation as? MKClusterAnnotation)?.memberAnnotations,
+            let content = contentView(selectedState, memberAnnotations)
         else {
             return
         }
