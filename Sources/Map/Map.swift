@@ -34,6 +34,7 @@ where AnnotationItems.Element: Identifiable, OverlayItems.Element: Identifiable 
 
     let annotationItems: AnnotationItems
     @Binding var selectedItems: Set<AnnotationItems.Element.ID>
+    @Binding var visibleItems: Set<AnyHashable>
     let annotationContent: (AnnotationItems.Element) -> MapAnnotation
 
     let overlayItems: OverlayItems
@@ -187,6 +188,7 @@ extension Map {
         userTrackingMode: Binding<MKUserTrackingMode>? = nil,
         annotationItems: AnnotationItems,
         selectedItems: Binding<Set<AnnotationItems.Element.ID>> = .constant([]),
+        visibleItems: Binding<Set<AnyHashable>> = .constant([]),
         @MapAnnotationBuilder annotationContent: @escaping (AnnotationItems.Element) -> MapAnnotation,
         overlayItems: OverlayItems,
         @MapOverlayBuilder overlayContent: @escaping (OverlayItems.Element) -> MapOverlay,
@@ -209,6 +211,7 @@ extension Map {
         }
         self.annotationItems = annotationItems
         self._selectedItems = selectedItems
+        self._visibleItems = visibleItems
         self.annotationContent = annotationContent
         self.overlayItems = overlayItems
         self.overlayContent = overlayContent
@@ -225,6 +228,7 @@ extension Map {
         userTrackingMode: Binding<MKUserTrackingMode>? = nil,
         annotationItems: AnnotationItems,
         selectedItems: Binding<Set<AnnotationItems.Element.ID>> = .constant([]),
+        visibleItems: Binding<Set<AnyHashable>> = .constant([]),
         @MapAnnotationBuilder annotationContent: @escaping (AnnotationItems.Element) -> MapAnnotation,
         overlayItems: OverlayItems,
         @MapOverlayBuilder overlayContent: @escaping (OverlayItems.Element) -> MapOverlay,
@@ -250,6 +254,7 @@ extension Map {
         self.overlayItems = overlayItems
         self.overlayContent = overlayContent
         self._selectedItems = selectedItems
+        self._visibleItems = visibleItems
         self._selectedFeature = selectedFeature
     }
 

@@ -48,6 +48,7 @@ extension Map {
             let animation = context.transaction.animation
             updateAnnotations(on: mapView, from: view, to: newView)
             updateSelectedItem(on: mapView, from: view, to: newView)
+            updateVisibleItems(on: mapView, from: view, to: newView)
             updateCamera(on: mapView, context: context, animated: animation != nil)
             updateSelectableMapFeatures(on: mapView, from: view, to: newView)
             updateInformationVisibility(on: mapView, from: view, to: newView)
@@ -229,6 +230,13 @@ extension Map {
                 mapView.selectedAnnotations = []
             }
         }
+        
+        private func updateVisibleItems(on mapView: MKMapView, from previousView: Map?, to newView: Map) {
+            guard newView.coordinateRegion.center.latitude != previousView?.coordinateRegion.center.latitude ||
+            newView.coordinateRegion.center.latitude != previousView?.coordinateRegion.center.latitude
+            else { return }
+            print("new amount of visible: \(newView.visibleItems.count)")
+        }
 
         private func updatePointOfInterestFilter(on mapView: MKMapView, from previousView: Map?, to newView: Map) {
             if previousView?.pointOfInterestFilter != newView.pointOfInterestFilter {
@@ -285,6 +293,8 @@ extension Map {
             }
             view?.coordinateRegion = mapView.region
             view?.mapRect = mapView.visibleMapRect
+            let visibleMapRect = mapView.visibleMapRect
+            view?.visibleItems = mapView.annotations(in: visibleMapRect)
         }
 
         @available(macOS 11, *)

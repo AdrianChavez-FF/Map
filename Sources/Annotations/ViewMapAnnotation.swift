@@ -36,7 +36,6 @@ public struct ViewMapAnnotation<Content: View, ClusterContent: View>: MapAnnotat
 
     public static func registerView(on mapView: MKMapView) {
         mapView.register(MKMapAnnotationView<Content, ClusterContent>.self, forAnnotationViewWithReuseIdentifier: reuseIdentifier)
-        mapView.register(MKMapClusterView<Content, ClusterContent>.self, forAnnotationViewWithReuseIdentifier: "customClusterReuseIdentifier")
     }
 
     // MARK: Stored Properties
