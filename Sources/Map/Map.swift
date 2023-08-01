@@ -35,6 +35,7 @@ where AnnotationItems.Element: Identifiable, OverlayItems.Element: Identifiable 
     let annotationItems: AnnotationItems
     @Binding var selectedItems: Set<AnnotationItems.Element.ID>
     @Binding var visibleItems: Set<AnyHashable>
+    @Binding var obscuredBottomContentSize: CGFloat
     let annotationContent: (AnnotationItems.Element) -> MapAnnotation
 
     let overlayItems: OverlayItems
@@ -189,6 +190,7 @@ extension Map {
         annotationItems: AnnotationItems,
         selectedItems: Binding<Set<AnnotationItems.Element.ID>> = .constant([]),
         visibleItems: Binding<Set<AnyHashable>> = .constant([]),
+        obscuredBottomContentSize: Binding<CGFloat> = .constant(0.0),
         @MapAnnotationBuilder annotationContent: @escaping (AnnotationItems.Element) -> MapAnnotation,
         overlayItems: OverlayItems,
         @MapOverlayBuilder overlayContent: @escaping (OverlayItems.Element) -> MapOverlay,
@@ -212,6 +214,7 @@ extension Map {
         self.annotationItems = annotationItems
         self._selectedItems = selectedItems
         self._visibleItems = visibleItems
+        self._obscuredBottomContentSize = obscuredBottomContentSize
         self.annotationContent = annotationContent
         self.overlayItems = overlayItems
         self.overlayContent = overlayContent
@@ -229,6 +232,7 @@ extension Map {
         annotationItems: AnnotationItems,
         selectedItems: Binding<Set<AnnotationItems.Element.ID>> = .constant([]),
         visibleItems: Binding<Set<AnyHashable>> = .constant([]),
+        obscuredBottomContentSize: Binding<CGFloat> = .constant(0.0),
         @MapAnnotationBuilder annotationContent: @escaping (AnnotationItems.Element) -> MapAnnotation,
         overlayItems: OverlayItems,
         @MapOverlayBuilder overlayContent: @escaping (OverlayItems.Element) -> MapOverlay,
@@ -255,6 +259,7 @@ extension Map {
         self.overlayContent = overlayContent
         self._selectedItems = selectedItems
         self._visibleItems = visibleItems
+        self._obscuredBottomContentSize = obscuredBottomContentSize
         self._selectedFeature = selectedFeature
     }
 
@@ -615,6 +620,7 @@ extension Map where OverlayItems == [IdentifiableObject<MKOverlay>] {
         annotationItems: AnnotationItems,
         visibleItems: Binding<Set<AnyHashable>>,
         selectedItems: Binding<Set<AnnotationItems.Element.ID>>,
+        obscuredBottomContentHeight: Binding<CGFloat>,
         @MapAnnotationBuilder annotationContent: @escaping (AnnotationItems.Element) -> MapAnnotation,
         overlays: [MKOverlay] = [],
         @MapOverlayBuilder overlayContent: @escaping (MKOverlay) -> MapOverlay = { overlay in
@@ -642,6 +648,7 @@ extension Map where OverlayItems == [IdentifiableObject<MKOverlay>] {
             selectedFeature: selectedFeature
         )
     }
+    // todo add obscured
 
     public init(
         mapRect: Binding<MKMapRect>,
