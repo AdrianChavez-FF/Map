@@ -235,7 +235,14 @@ extension Map {
             guard newView.coordinateRegion.center.latitude != previousView?.coordinateRegion.center.latitude ||
             newView.coordinateRegion.center.latitude != previousView?.coordinateRegion.center.latitude
             else { return }
+            
+            let visibleMapRect = mapView.visibleMapRect
+            let visannotations = mapView.annotations(in: visibleMapRect)
+            view?.visibleItems = visannotations
+            print("1 new visible \(visannotations.count)")
             print("new amount of visible: \(newView.visibleItems.count)")
+            print("old amount of visible: \(previousView?.visibleItems.count)")
+
         }
 
         private func updatePointOfInterestFilter(on mapView: MKMapView, from previousView: Map?, to newView: Map) {
@@ -248,9 +255,6 @@ extension Map {
             guard !regionIsChanging else {
                 return
             }
-            let visibleMapRect = mapView.visibleMapRect
-            view?.visibleItems = mapView.annotations(in: visibleMapRect)
-            print("new visible \(view?.visibleItems.count)")
             
             if newView.usesRegion {
                 let newRegion = newView.coordinateRegion
@@ -258,8 +262,13 @@ extension Map {
                         && !mapView.region.equals(to: newRegion) else {
                     return
                 }
-                DispatchQueue.main.async {
+                DispatchQueue.main.async { [self] in
                     mapView.setRegion(newRegion, animated: animated)
+                    
+                    let visibleMapRect = mapView.visibleMapRect
+                    let visannotations = mapView.annotations(in: visibleMapRect)
+                    view?.visibleItems = visannotations
+                    print("2 new visible \(visannotations.count)")
                 }
             } else {
                 let newRect = newView.mapRect
@@ -267,8 +276,13 @@ extension Map {
                         && !mapView.visibleMapRect.equals(to: newRect) else {
                     return
                 }
-                DispatchQueue.main.async {
+                DispatchQueue.main.async { [self] in
                     mapView.setVisibleMapRect(newRect, animated: animated)
+                    
+                    let visibleMapRect = mapView.visibleMapRect
+                    let visannotations = mapView.annotations(in: visibleMapRect)
+                    view?.visibleItems = visannotations
+                    print("3 new visible \(visannotations.count)")
                 }
             }
         }
@@ -297,7 +311,9 @@ extension Map {
             view?.coordinateRegion = mapView.region
             view?.mapRect = mapView.visibleMapRect
             let visibleMapRect = mapView.visibleMapRect
-            view?.visibleItems = mapView.annotations(in: visibleMapRect)
+            let visannotations = mapView.annotations(in: visibleMapRect)
+            view?.visibleItems = visannotations
+            print("4 new visible \(visannotations.count)")
         }
 
         @available(macOS 11, *)
