@@ -337,11 +337,11 @@ extension Map {
             }
 
             // Cluster annotation
-            if let cluster = annotation as? MKClusterAnnotation,
-               let firstAnnotation = cluster.memberAnnotations.first,
-               let mapAnnotation = annotationContentByObject[ObjectIdentifier(firstAnnotation)] {
-                return mapAnnotation.clusterView(for: mapView, clusterAnnotation: cluster)
-            }
+//            if let cluster = annotation as? MKClusterAnnotation,
+//               let firstAnnotation = cluster.memberAnnotations.first,
+//               let mapAnnotation = annotationContentByObject[ObjectIdentifier(firstAnnotation)] {
+//                return mapAnnotation.clusterView(for: mapView, clusterAnnotation: cluster)
+//            }
             
             // Simple annotation
             guard let content = annotationContentByObject[ObjectIdentifier(annotation)] else {

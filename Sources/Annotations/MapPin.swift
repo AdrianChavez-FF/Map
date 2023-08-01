@@ -102,6 +102,7 @@ extension MapPin: MapAnnotation {
         if #available(iOS 14, macOS 11, tvOS 14, *), let tint = tint, let pin = view as? MKPinAnnotationView {
             pin.pinTintColor = .init(tint)
         }
+        view.displayPriority = .required
         return view
     }
 

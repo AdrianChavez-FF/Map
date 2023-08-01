@@ -22,7 +22,7 @@ class MKMapAnnotationView<Content: View, ClusterContent: View>: MKAnnotationView
     func setup(for mapAnnotation: ViewMapAnnotation<Content, ClusterContent>) {
         annotation = mapAnnotation.annotation
         self.viewMapAnnotation = mapAnnotation
-        self.clusteringIdentifier = mapAnnotation.clusteringIdentifier
+//        self.clusteringIdentifier = mapAnnotation.clusteringIdentifier
         self.displayPriority = .defaultLow
         self.collisionMode = .circle
         updateContent(for: self.isSelected)

@@ -81,6 +81,7 @@ extension MapMarker: MapAnnotation {
                 marker.markerTintColor = tint
             }
         }
+        view.displayPriority = .required
         return view
     }
 
