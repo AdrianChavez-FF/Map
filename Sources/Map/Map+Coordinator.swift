@@ -233,21 +233,26 @@ extension Map {
         
         private func updateVisibleItems(on mapView: MKMapView, from previousView: Map?, to newView: Map) {
             guard newView.coordinateRegion.center.latitude != previousView?.coordinateRegion.center.latitude ||
-            newView.coordinateRegion.center.latitude != previousView?.coordinateRegion.center.latitude
+            newView.coordinateRegion.center.latitude != previousView?.coordinateRegion.center.latitude || newView.obscuredBottomContentSize != previousView?.obscuredBottomContentSize
             else { return }
             
             updateVisibleItemsData(mapView: mapView, map: newView)
-            print("1 new amount of visible: \(newView.visibleItems.count)")
-            print("1 old amount of visible: \(previousView?.visibleItems.count)")
+            print("newview visible: \(newView.visibleItems.count)")
+            print("prevview visible: \(previousView?.visibleItems.count)")
         }
         
         @discardableResult
         private func updateVisibleItemsData(mapView: MKMapView, map: Map) -> Int {
+            guard let view = view else {
+                return -1
+            }
             let visibleMapRect = mapView.visibleMapRect
             // Convert the bottom sheet height to map points
-            let bottomSheetPoint = mapView.convert(CGPoint(x: 0, y: map.obscuredBottomContentSize), toCoordinateFrom: mapView)
+            let bottomSheetPoint = mapView.convert(CGPoint(x: 0, y: view.obscuredBottomContentSize), toCoordinateFrom: mapView)
             let bottomSheetMapPoint = MKMapPoint(bottomSheetPoint)
-            
+            print("checking view's obscured size \(view.obscuredBottomContentSize)")
+            print("map's obscured size \(map.obscuredBottomContentSize)")
+
             // Calculate the new visible map rect
             let newVisibleMapRect = MKMapRect(
                 x: visibleMapRect.origin.x,
@@ -259,8 +264,8 @@ extension Map {
             // Finally get annotations
             let visannotations = mapView.annotations(in: newVisibleMapRect)
 
-            view?.visibleItems = visannotations
-            print("1 new visible amt: \(visannotations.count)")
+            view.visibleItems = visannotations
+            print("looked for visible w/ osbcured content, pins amt: \(visannotations.count)")
             return visannotations.count
         }
 
