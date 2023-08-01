@@ -59,11 +59,6 @@ public struct MapMarker {
 
 @available(macOS 11, *)
 extension MapMarker: MapAnnotation {
-    public func clusterView(for mapView: MKMapView, clusterAnnotation: MKClusterAnnotation) -> MKAnnotationView? {
-        // Custom cluster view can be implemented if MapMarker is extended for ContentCluster property as is done in the ViewMapAnnotation
-        return nil
-    }
-    
 
     public static func registerView(on mapView: MKMapView) {
         mapView.register(

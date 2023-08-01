@@ -248,7 +248,10 @@ extension Map {
             guard !regionIsChanging else {
                 return
             }
-
+            let visibleMapRect = mapView.visibleMapRect
+            view?.visibleItems = mapView.annotations(in: visibleMapRect)
+            print("new visible \(view?.visibleItems.count)")
+            
             if newView.usesRegion {
                 let newRegion = newView.coordinateRegion
                 guard !(previousView?.coordinateRegion.equals(to: newRegion) ?? false)
@@ -362,17 +365,6 @@ extension Map {
         }
         
         public func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-            if let cluster = view.annotation as? MKClusterAnnotation {
-                var ids = [AnnotationItems.Element.ID]()
-                for annotation in cluster.memberAnnotations {
-                    guard let id = annotationContentByID.first(where: { $0.value.annotation === annotation })?.key else {
-                        continue
-                    }
-                    ids.append(id)
-                }
-                self.view?.selectedItems = Set(ids)
-                return
-            }
 
             // Find the item ID of the selected annotation
             guard let id = annotationContentByID.first(where: { $0.value.annotation === view.annotation })?.key else {

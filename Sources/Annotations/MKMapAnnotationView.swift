@@ -10,20 +10,19 @@
 import MapKit
 import SwiftUI
 
-class MKMapAnnotationView<Content: View, ClusterContent: View>: MKAnnotationView {
+class MKMapAnnotationView<Content: View>: MKAnnotationView {
 
     // MARK: Stored Properties
 
     private var controller: NativeHostingController<Content>?
-    private var viewMapAnnotation: ViewMapAnnotation<Content, ClusterContent>?
+    private var viewMapAnnotation: ViewMapAnnotation<Content>?
 
     // MARK: Methods
 
-    func setup(for mapAnnotation: ViewMapAnnotation<Content, ClusterContent>) {
+    func setup(for mapAnnotation: ViewMapAnnotation<Content>) {
         annotation = mapAnnotation.annotation
         self.viewMapAnnotation = mapAnnotation
-//        self.clusteringIdentifier = mapAnnotation.clusteringIdentifier
-        self.displayPriority = .defaultLow
+        self.displayPriority = .required
         self.collisionMode = .circle
         updateContent(for: self.isSelected)
     }

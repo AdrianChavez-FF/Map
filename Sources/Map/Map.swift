@@ -403,7 +403,7 @@ extension Map where AnnotationItems == [IdentifiableObject<MKAnnotation>] {
         annotations: [MKAnnotation] = [],
         @MapAnnotationBuilder annotationContent: @escaping (MKAnnotation) -> MapAnnotation = { annotation in
             assertionFailure("Please provide an `annotationContent` closure for the values in `annotations`.")
-            return ViewMapAnnotation<EmptyView, EmptyView>(annotation: annotation) { _ in }
+            return ViewMapAnnotation<EmptyView>(annotation: annotation) { _ in }
         },
         overlayItems: OverlayItems,
         @MapOverlayBuilder overlayContent: @escaping (OverlayItems.Element) -> MapOverlay,
@@ -437,7 +437,7 @@ extension Map where AnnotationItems == [IdentifiableObject<MKAnnotation>] {
         annotations: [MKAnnotation] = [],
         @MapAnnotationBuilder annotationContent: @escaping (MKAnnotation) -> MapAnnotation = { annotation in
             assertionFailure("Please provide an `annotationContent` closure for the values in `annotations`.")
-            return ViewMapAnnotation<EmptyView, EmptyView>(annotation: annotation) { _ in }
+            return ViewMapAnnotation<EmptyView>(annotation: annotation) { _ in }
         },
         overlayItems: OverlayItems,
         @MapOverlayBuilder overlayContent: @escaping (OverlayItems.Element) -> MapOverlay,
@@ -842,7 +842,7 @@ extension Map
         annotations: [MKAnnotation] = [],
         @MapAnnotationBuilder annotationContent: @escaping (MKAnnotation) -> MapAnnotation = { annotation in
             assertionFailure("Please provide an `annotationContent` closure for the values in `annotations`.")
-            return ViewMapAnnotation<EmptyView, EmptyView>(annotation: annotation) { _ in }
+            return ViewMapAnnotation<EmptyView>(annotation: annotation) { _ in }
         },
         overlays: [MKOverlay] = [],
         @MapOverlayBuilder overlayContent: @escaping (MKOverlay) -> MapOverlay = { overlay in
@@ -881,7 +881,7 @@ extension Map
         annotations: [MKAnnotation] = [],
         @MapAnnotationBuilder annotationContent: @escaping (MKAnnotation) -> MapAnnotation = { annotation in
             assertionFailure("Please provide an `annotationContent` closure for the values in `annotations`.")
-            return ViewMapAnnotation<EmptyView, EmptyView>(annotation: annotation) { _ in }
+            return ViewMapAnnotation<EmptyView>(annotation: annotation) { _ in }
         },
         overlays: [MKOverlay] = [],
         @MapOverlayBuilder overlayContent: @escaping (MKOverlay) -> MapOverlay = { overlay in

@@ -10,7 +10,7 @@
 import MapKit
 import SwiftUI
 
-public struct ViewMapAnnotation<Content: View, ClusterContent: View>: MapAnnotation {
+public struct ViewMapAnnotation<Content: View>: MapAnnotation {
 
     // MARK: Nested Types
 
@@ -35,15 +35,13 @@ public struct ViewMapAnnotation<Content: View, ClusterContent: View>: MapAnnotat
     // MARK: Static Functions
 
     public static func registerView(on mapView: MKMapView) {
-        mapView.register(MKMapAnnotationView<Content, ClusterContent>.self, forAnnotationViewWithReuseIdentifier: reuseIdentifier)
+        mapView.register(MKMapAnnotationView<Content>.self, forAnnotationViewWithReuseIdentifier: reuseIdentifier)
     }
 
     // MARK: Stored Properties
 
     public let annotation: MKAnnotation
     let content: (Bool) -> Content
-    let clusterContent: (Bool, [MKAnnotation]) -> ClusterContent?
-    let clusteringIdentifier: String?
 
     // MARK: Initialization
 
@@ -51,26 +49,18 @@ public struct ViewMapAnnotation<Content: View, ClusterContent: View>: MapAnnotat
         coordinate: CLLocationCoordinate2D,
         title: String? = nil,
         subtitle: String? = nil,
-        clusteringIdentifier: String? = nil,
-        @ViewBuilder content: @escaping (Bool) -> Content,
-        @ViewBuilder clusterContent: @escaping (Bool, [MKAnnotation]) -> ClusterContent? = { _, _ in nil }
+        @ViewBuilder content: @escaping (Bool) -> Content
     ) {
         self.annotation = Annotation(coordinate: coordinate, title: title, subtitle: subtitle)
         self.content = content
-        self.clusterContent = clusterContent
-        self.clusteringIdentifier = clusteringIdentifier
     }
 
     public init(
         annotation: MKAnnotation,
-        clusteringIdentifier: String? = nil,
-        @ViewBuilder content: @escaping (Bool) -> Content,
-        @ViewBuilder clusterContent: @escaping (Bool, [MKAnnotation]) -> ClusterContent? = { _, _ in nil }
+        @ViewBuilder content: @escaping (Bool) -> Content
     ) {
         self.annotation = annotation
-        self.clusteringIdentifier = clusteringIdentifier
         self.content = content
-        self.clusterContent = clusterContent
     }
 
     // MARK: Methods
@@ -79,19 +69,9 @@ public struct ViewMapAnnotation<Content: View, ClusterContent: View>: MapAnnotat
         let view = mapView.dequeueReusableAnnotationView(
             withIdentifier: Self.reuseIdentifier,
             for: annotation
-        ) as? MKMapAnnotationView<Content, ClusterContent>
+        ) as? MKMapAnnotationView<Content>
 
         view?.setup(for: self)
-        return view
-    }
-    
-    public func clusterView(for mapView: MKMapView, clusterAnnotation: MKClusterAnnotation) -> MKAnnotationView? {
-        let view = mapView.dequeueReusableAnnotationView(
-            withIdentifier: "customClusterReuseIdentifier",
-            for: clusterAnnotation
-        ) as? MKMapClusterView<Content, ClusterContent>
-
-        view?.setup(for: self, clusterAnnotation: clusterAnnotation)
         return view
     }
 }
