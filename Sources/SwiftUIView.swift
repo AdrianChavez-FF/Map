@@ -32,13 +32,13 @@ struct SwiftUIView: View {
     var body: some View {
         ZStack {
             Text("test")
-            Map(coordinateRegion: $viewModel.region, annotationItems: viewModel.locations, selectedItems: $selected) { location in
-                ViewMapAnnotation(coordinate: location.coordinate, clusteringIdentifier: nil) { selected in
-                    MapViewPin(isSelected: selected, number: 1)
-                } clusterContent: { bool, annotations in
-                    MapViewPin(isSelected: bool, number: annotations.count)
-                }
-            }
+//            Map(coordinateRegion: $viewModel.region, annotationItems: viewModel.locations, selectedItems: $selected) { location in
+//                ViewMapAnnotation(coordinate: location.coordinate, clusteringIdentifier: nil) { selected in
+//                    MapViewPin(isSelected: selected, number: 1)
+//                } clusterContent: { bool, annotations in
+//                    MapViewPin(isSelected: bool, number: annotations.count)
+//                }
+//            }
         }
         //        Map(
         //            coordinateRegion: $viewModel.region,
