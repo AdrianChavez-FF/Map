@@ -236,32 +236,13 @@ extension Map {
             newView.coordinateRegion.center.latitude != previousView?.coordinateRegion.center.latitude
             else { return }
             
-            updateVisibleItemsData(mapView: mapView, map: newView)
-            print("1 new amount of visible: \(newView.visibleItems.count)")
-            print("1 old amount of visible: \(previousView?.visibleItems.count)")
-        }
-        
-        @discardableResult
-        private func updateVisibleItemsData(mapView: MKMapView, map: Map) -> Int {
             let visibleMapRect = mapView.visibleMapRect
-            // Convert the bottom sheet height to map points
-            let bottomSheetPoint = mapView.convert(CGPoint(x: 0, y: map.obscuredBottomContentSize), toCoordinateFrom: mapView)
-            let bottomSheetMapPoint = MKMapPoint(bottomSheetPoint)
-            
-            // Calculate the new visible map rect
-            let newVisibleMapRect = MKMapRect(
-                x: visibleMapRect.origin.x,
-                y: visibleMapRect.origin.y,
-                width: visibleMapRect.size.width,
-                height: visibleMapRect.size.height - bottomSheetMapPoint.y
-            )
-            
-            // Finally get annotations
-            let visannotations = mapView.annotations(in: newVisibleMapRect)
-
+            let visannotations = mapView.annotations(in: visibleMapRect)
             view?.visibleItems = visannotations
-            print("1 new visible amt: \(visannotations.count)")
-            return visannotations.count
+            print("1 new visible \(visannotations.count)")
+            print("new amount of visible: \(newView.visibleItems.count)")
+            print("old amount of visible: \(previousView?.visibleItems.count)")
+
         }
 
         private func updatePointOfInterestFilter(on mapView: MKMapView, from previousView: Map?, to newView: Map) {
@@ -287,7 +268,7 @@ extension Map {
                     let visibleMapRect = mapView.visibleMapRect
                     let visannotations = mapView.annotations(in: visibleMapRect)
                     view?.visibleItems = visannotations
-                    print("2 new visible amt: \(visannotations.count)")
+                    print("2 new visible \(visannotations.count)")
                 }
             } else {
                 let newRect = newView.mapRect
@@ -301,7 +282,7 @@ extension Map {
                     let visibleMapRect = mapView.visibleMapRect
                     let visannotations = mapView.annotations(in: visibleMapRect)
                     view?.visibleItems = visannotations
-                    print("3 new visible amt: \(visannotations.count)")
+                    print("3 new visible \(visannotations.count)")
                 }
             }
         }
@@ -331,11 +312,8 @@ extension Map {
             view?.mapRect = mapView.visibleMapRect
             let visibleMapRect = mapView.visibleMapRect
             let visannotations = mapView.annotations(in: visibleMapRect)
-//            view?.visibleItems = visannotations
-            print("4 new visible amt: \(visannotations.count)")
-            if let map = self.view {
-                print("ex.5 new visible amt: \(updateVisibleItemsData(mapView: mapView, map: map))")
-            }
+            view?.visibleItems = visannotations
+            print("4 new visible \(visannotations.count)")
         }
 
         @available(macOS 11, *)
