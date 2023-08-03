@@ -14,7 +14,7 @@ public struct ViewMapAnnotation<Content: View>: MapAnnotation {
 
     // MARK: Nested Types
 
-    private class Annotation: NSObject, MKAnnotation {
+    internal class Annotation: NSObject, MKAnnotation {
 
         // MARK: Stored Properties
 
