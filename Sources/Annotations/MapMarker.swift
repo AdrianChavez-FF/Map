@@ -15,11 +15,11 @@ public struct MapMarker {
 
     // MARK: Nested Types
 
-    internal class Annotation: NSObject, MKAnnotation {
+    public class Annotation: NSObject, MKAnnotation {
 
         // MARK: Stored Properties
 
-        let coordinate: CLLocationCoordinate2D
+        public let coordinate: CLLocationCoordinate2D
 
         // MARK: Initialization
 

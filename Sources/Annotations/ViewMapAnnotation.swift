@@ -14,13 +14,13 @@ public struct ViewMapAnnotation<Content: View>: MapAnnotation {
 
     // MARK: Nested Types
 
-    internal class Annotation: NSObject, MKAnnotation {
+    public class Annotation: NSObject, MKAnnotation {
 
         // MARK: Stored Properties
 
-        let coordinate: CLLocationCoordinate2D
-        let title: String?
-        let subtitle: String?
+        public let coordinate: CLLocationCoordinate2D
+        public let title: String?
+        public let subtitle: String?
 
         // MARK: Initialization
 
