@@ -76,6 +76,7 @@ extension Map {
         }
 
         private func updateAnnotations(on mapView: MKMapView, from previousView: Map?, to newView: Map) {
+
             let changes: CollectionDifference<AnnotationItems.Element>
             if let previousView = previousView {
                 changes = newView.annotationItems.difference(from: previousView.annotationItems) { $0.id == $1.id }
@@ -310,6 +311,10 @@ extension Map {
             }
             view?.coordinateRegion = mapView.region
             view?.mapRect = mapView.visibleMapRect
+            
+            let rect = mapView.visibleMapRect
+            mapView.setVisibleMapRect(rect, edgePadding: UIEdgeInsets(top: 0, left: 0, bottom: 200, right: 0), animated: true)
+            
             let visibleMapRect = mapView.visibleMapRect
             let visannotations = mapView.annotations(in: visibleMapRect)
             view?.visibleItems = visannotations
