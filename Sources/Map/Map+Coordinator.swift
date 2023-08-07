@@ -235,14 +235,7 @@ extension Map {
             guard newView.coordinateRegion.center.latitude != previousView?.coordinateRegion.center.latitude ||
             newView.coordinateRegion.center.latitude != previousView?.coordinateRegion.center.latitude
             else { return }
-            
-            let visibleMapRect = mapView.visibleMapRect
-            let visannotations = mapView.annotations(in: visibleMapRect)
-            view?.visibleItems = visannotations
-            print("1 new visible \(visannotations.count)")
-            print("new amount of visible: \(newView.visibleItems.count)")
-            print("old amount of visible: \(previousView?.visibleItems.count)")
-
+            // Do nothing, the other side of the binding can't affect what's visible
         }
 
         private func updatePointOfInterestFilter(on mapView: MKMapView, from previousView: Map?, to newView: Map) {
@@ -264,11 +257,6 @@ extension Map {
                 }
                 DispatchQueue.main.async { [self] in
                     mapView.setRegion(newRegion, animated: animated)
-                    
-                    let visibleMapRect = mapView.visibleMapRect
-                    let visannotations = mapView.annotations(in: visibleMapRect)
-                    view?.visibleItems = visannotations
-                    print("2 new visible \(visannotations.count)")
                 }
             } else {
                 let newRect = newView.mapRect
@@ -278,11 +266,6 @@ extension Map {
                 }
                 DispatchQueue.main.async { [self] in
                     mapView.setVisibleMapRect(newRect, animated: animated)
-                    
-                    let visibleMapRect = mapView.visibleMapRect
-                    let visannotations = mapView.annotations(in: visibleMapRect)
-                    view?.visibleItems = visannotations
-                    print("3 new visible \(visannotations.count)")
                 }
             }
         }
@@ -364,13 +347,6 @@ extension Map {
                     self.selectFeature(feature)
                 }
             }
-
-            // Cluster annotation
-//            if let cluster = annotation as? MKClusterAnnotation,
-//               let firstAnnotation = cluster.memberAnnotations.first,
-//               let mapAnnotation = annotationContentByObject[ObjectIdentifier(firstAnnotation)] {
-//                return mapAnnotation.clusterView(for: mapView, clusterAnnotation: cluster)
-//            }
             
             // Simple annotation
             guard let content = annotationContentByObject[ObjectIdentifier(annotation)] else {
