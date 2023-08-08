@@ -293,8 +293,12 @@ extension Map {
             }
             view?.coordinateRegion = mapView.region
             view?.mapRect = mapView.visibleMapRect
-            let visibleMapRect = mapView.visibleMapRect
-            let visannotations = mapView.annotations(in: visibleMapRect)
+            
+            // Calculate the top half of the visible map rect
+            var topHalfMapRect = mapView.visibleMapRect
+            topHalfMapRect.size.height /= 2
+            
+            let visannotations = mapView.annotations(in: topHalfMapRect)
             view?.visibleItems = visannotations
             print("4 new visible \(visannotations.count)")
         }
