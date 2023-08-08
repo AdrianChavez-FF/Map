@@ -151,7 +151,9 @@ extension Map {
             guard previousView?.bottomPartOfMapObscured != newView.bottomPartOfMapObscured else {
                 return
             }
-            mapView.layoutMargins = UIEdgeInsets(top: 0, left: 0, bottom: view?.bottomPartOfMapObscured ?? 0.0, right: 0)
+            DispatchQueue.main.async { [self] in
+                mapView.layoutMargins = UIEdgeInsets(top: 0, left: 0, bottom: view?.bottomPartOfMapObscured ?? 0.0, right: 0)
+            }
 
             var mapRect = mapView.visibleMapRect
             
@@ -308,8 +310,9 @@ extension Map {
             }
             
             // Setup layout margins first
-            mapView.layoutMargins = UIEdgeInsets(top: 0, left: 0, bottom: view?.bottomPartOfMapObscured ?? 0.0, right: 0)
-            
+            DispatchQueue.main.async { [self] in
+                mapView.layoutMargins = UIEdgeInsets(top: 0, left: 0, bottom: view?.bottomPartOfMapObscured ?? 0.0, right: 0)
+            }
             view?.coordinateRegion = mapView.region
             view?.mapRect = mapView.visibleMapRect
             
