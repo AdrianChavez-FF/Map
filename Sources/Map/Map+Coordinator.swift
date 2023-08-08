@@ -56,6 +56,7 @@ extension Map {
             updateOverlays(on: mapView, from: view, to: newView)
             updatePointOfInterestFilter(on: mapView, from: view, to: newView)
             updateRegion(on: mapView, from: view, to: newView, animated: animation != nil)
+            updateBottomPadding(on: mapView, from: view, to: newView)
             updateType(on: mapView, from: view, to: newView)
             updateUserTracking(on: mapView, from: view, to: newView, animated: animation != nil)
 
@@ -144,6 +145,24 @@ extension Map {
                 mapView.showsPitchControl = newView.informationVisibility.contains(.pitchControl)
             }
             #endif
+        }
+        
+        private func updateBottomPadding(on mapView: MKMapView, from previousView: Map?, to newView: Map) {
+            guard previousView?.bottomPaddingPercentage != newView.bottomPaddingPercentage else {
+                return
+            }
+            let paddingRatio = newView.bottomPaddingPercentage
+            
+            // Calculate the top half of the visible map rect
+            var topHalfMapRect = mapView.visibleMapRect
+            topHalfMapRect.size.height = topHalfMapRect.size.height - (topHalfMapRect.size.height * paddingRatio)
+            
+            let visannotations = mapView.annotations(in: topHalfMapRect)
+            view?.visibleItems = visannotations
+            let bottomPadding = mapView.frame.height - (mapView.frame.height * paddingRatio)
+            mapView.layoutMargins = UIEdgeInsets(top: 0, left: 0, bottom: bottomPadding, right: 0)
+            
+            print("5 new visible \(visannotations.count)")
         }
 
         private func updateSelectableMapFeatures(on mapView: MKMapView, from previousView: Map?, to newView: Map) {
@@ -294,13 +313,15 @@ extension Map {
             view?.coordinateRegion = mapView.region
             view?.mapRect = mapView.visibleMapRect
             
+            let paddingRatio = view?.bottomPaddingPercentage ?? 0.0
+            
             // Calculate the top half of the visible map rect
             var topHalfMapRect = mapView.visibleMapRect
-            topHalfMapRect.size.height /= 2
+            topHalfMapRect.size.height = topHalfMapRect.size.height - (topHalfMapRect.size.height * paddingRatio)
             
             let visannotations = mapView.annotations(in: topHalfMapRect)
             view?.visibleItems = visannotations
-            let bottomPadding = mapView.frame.height / 2
+            let bottomPadding = mapView.frame.height - (mapView.frame.height * paddingRatio)
             mapView.layoutMargins = UIEdgeInsets(top: 0, left: 0, bottom: bottomPadding, right: 0)
 
             print("4 new visible \(visannotations.count)")
