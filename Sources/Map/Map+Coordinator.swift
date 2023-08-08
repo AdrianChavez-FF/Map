@@ -159,7 +159,7 @@ extension Map {
             
             let visannotations = mapView.annotations(in: topHalfMapRect)
             view?.visibleItems = visannotations
-            let bottomPadding = mapView.frame.height - (mapView.frame.height * paddingRatio)
+            let bottomPadding = mapView.frame.height * paddingRatio
             mapView.layoutMargins = UIEdgeInsets(top: 0, left: 0, bottom: bottomPadding, right: 0)
             
             print("5 new visible \(visannotations.count)")
@@ -310,19 +310,24 @@ extension Map {
             guard !regionIsChanging else {
                 return
             }
+            
+            // Setup layout margins first
+            let paddingRatio = view?.bottomPaddingPercentage ?? 0.0
+            let bottomPadding = mapView.frame.height * paddingRatio
+            mapView.layoutMargins = UIEdgeInsets(top: 0, left: 0, bottom: bottomPadding, right: 0)
+            
+            
             view?.coordinateRegion = mapView.region
             view?.mapRect = mapView.visibleMapRect
             
-            let paddingRatio = view?.bottomPaddingPercentage ?? 0.0
             
             // Calculate the top half of the visible map rect
-            var topHalfMapRect = mapView.visibleMapRect
-            topHalfMapRect.size.height = topHalfMapRect.size.height - (topHalfMapRect.size.height * paddingRatio)
             
-            let visannotations = mapView.annotations(in: topHalfMapRect)
+            var mapRect = mapView.visibleMapRect
+//            topHalfMapRect.size.height = topHalfMapRect.size.height - (topHalfMapRect.size.height * paddingRatio)
+            
+            let visannotations = mapView.annotations(in: mapRect)
             view?.visibleItems = visannotations
-            let bottomPadding = mapView.frame.height - (mapView.frame.height * paddingRatio)
-            mapView.layoutMargins = UIEdgeInsets(top: 0, left: 0, bottom: bottomPadding, right: 0)
 
             print("4 new visible \(visannotations.count)")
         }
