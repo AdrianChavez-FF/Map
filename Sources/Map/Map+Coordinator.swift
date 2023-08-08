@@ -300,6 +300,9 @@ extension Map {
             
             let visannotations = mapView.annotations(in: topHalfMapRect)
             view?.visibleItems = visannotations
+            let bottomPadding = mapView.frame.height / 2
+            mapView.layoutMargins = UIEdgeInsets(top: 0, left: 0, bottom: bottomPadding, right: 0)
+
             print("4 new visible \(visannotations.count)")
         }
 
