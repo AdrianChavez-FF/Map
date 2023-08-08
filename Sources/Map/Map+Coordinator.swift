@@ -148,19 +148,15 @@ extension Map {
         }
         
         private func updateBottomPadding(on mapView: MKMapView, from previousView: Map?, to newView: Map) {
-            guard previousView?.bottomPaddingPercentage != newView.bottomPaddingPercentage else {
+            guard previousView?.bottomPartOfMapObscured != newView.bottomPartOfMapObscured else {
                 return
             }
-            let paddingRatio = newView.bottomPaddingPercentage
+            mapView.layoutMargins = UIEdgeInsets(top: 0, left: 0, bottom: view?.bottomPartOfMapObscured ?? 0.0, right: 0)
+
+            var mapRect = mapView.visibleMapRect
             
-            // Calculate the top half of the visible map rect
-            var topHalfMapRect = mapView.visibleMapRect
-            topHalfMapRect.size.height = topHalfMapRect.size.height - (topHalfMapRect.size.height * paddingRatio)
-            
-            let visannotations = mapView.annotations(in: topHalfMapRect)
+            let visannotations = mapView.annotations(in: mapRect)
             view?.visibleItems = visannotations
-            let bottomPadding = mapView.frame.height * paddingRatio
-            mapView.layoutMargins = UIEdgeInsets(top: 0, left: 0, bottom: bottomPadding, right: 0)
             
             print("5 new visible \(visannotations.count)")
         }
@@ -312,10 +308,7 @@ extension Map {
             }
             
             // Setup layout margins first
-            let paddingRatio = view?.bottomPaddingPercentage ?? 0.0
-            let bottomPadding = mapView.frame.height * paddingRatio
-            mapView.layoutMargins = UIEdgeInsets(top: 0, left: 0, bottom: bottomPadding, right: 0)
-            
+            mapView.layoutMargins = UIEdgeInsets(top: 0, left: 0, bottom: view?.bottomPartOfMapObscured ?? 0.0, right: 0)
             
             view?.coordinateRegion = mapView.region
             view?.mapRect = mapView.visibleMapRect

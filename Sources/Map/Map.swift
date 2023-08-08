@@ -35,8 +35,8 @@ where AnnotationItems.Element: Identifiable, OverlayItems.Element: Identifiable 
     let annotationItems: AnnotationItems
     @Binding var selectedItems: Set<AnnotationItems.Element.ID>
     @Binding var visibleItems: Set<AnyHashable>
-    /// The amount % of the bottom of the map obscured by overlaid content
-    @Binding var bottomPaddingPercentage: CGFloat
+    /// The amount px of the bottom of the map obscured by overlaid content
+    @Binding var bottomPartOfMapObscured: CGFloat
     let annotationContent: (AnnotationItems.Element) -> MapAnnotation
 
     let overlayItems: OverlayItems
@@ -191,7 +191,7 @@ extension Map {
         annotationItems: AnnotationItems,
         selectedItems: Binding<Set<AnnotationItems.Element.ID>> = .constant([]),
         visibleItems: Binding<Set<AnyHashable>> = .constant([]),
-        bottomPaddingPercentage: Binding<CGFloat> = .constant(0.0),
+        bottomPartOfMapObscured: Binding<CGFloat> = .constant(0.0),
         @MapAnnotationBuilder annotationContent: @escaping (AnnotationItems.Element) -> MapAnnotation,
         overlayItems: OverlayItems,
         @MapOverlayBuilder overlayContent: @escaping (OverlayItems.Element) -> MapOverlay,
@@ -215,7 +215,7 @@ extension Map {
         self.annotationItems = annotationItems
         self._selectedItems = selectedItems
         self._visibleItems = visibleItems
-        self._bottomPaddingPercentage = bottomPaddingPercentage
+        self._bottomPartOfMapObscured = bottomPartOfMapObscured
         self.annotationContent = annotationContent
         self.overlayItems = overlayItems
         self.overlayContent = overlayContent
@@ -233,7 +233,7 @@ extension Map {
         annotationItems: AnnotationItems,
         selectedItems: Binding<Set<AnnotationItems.Element.ID>> = .constant([]),
         visibleItems: Binding<Set<AnyHashable>> = .constant([]),
-        bottomPaddingPercentage: Binding<CGFloat> = .constant(0.0),
+        bottomPartOfMapObscured: Binding<CGFloat> = .constant(0.0),
         @MapAnnotationBuilder annotationContent: @escaping (AnnotationItems.Element) -> MapAnnotation,
         overlayItems: OverlayItems,
         @MapOverlayBuilder overlayContent: @escaping (OverlayItems.Element) -> MapOverlay,
@@ -260,7 +260,7 @@ extension Map {
         self.overlayContent = overlayContent
         self._selectedItems = selectedItems
         self._visibleItems = visibleItems
-        self._bottomPaddingPercentage = bottomPaddingPercentage
+        self._bottomPartOfMapObscured = bottomPartOfMapObscured
         self._selectedFeature = selectedFeature
     }
 
@@ -620,7 +620,7 @@ extension Map where OverlayItems == [IdentifiableObject<MKOverlay>] {
         userTrackingMode: Binding<MKUserTrackingMode>? = nil,
         annotationItems: AnnotationItems,
         visibleItems: Binding<Set<AnyHashable>>,
-        bottomPaddingPercentage: Binding<CGFloat> = .constant(0.0),
+        bottomPartOfMapObscured: Binding<CGFloat> = .constant(0.0),
         selectedItems: Binding<Set<AnnotationItems.Element.ID>>,
         @MapAnnotationBuilder annotationContent: @escaping (AnnotationItems.Element) -> MapAnnotation,
         overlays: [MKOverlay] = [],
@@ -643,7 +643,7 @@ extension Map where OverlayItems == [IdentifiableObject<MKOverlay>] {
             annotationItems: annotationItems,
             selectedItems: selectedItems,
             visibleItems: visibleItems,
-            bottomPaddingPercentage: bottomPaddingPercentage,
+            bottomPartOfMapObscured: bottomPartOfMapObscured,
             annotationContent: annotationContent,
             overlayItems: overlays.map(IdentifiableObject.init),
             overlayContent: { overlayContent($0.object) },
