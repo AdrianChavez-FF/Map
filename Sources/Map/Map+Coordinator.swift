@@ -158,6 +158,7 @@ extension Map {
                 
                 let visannotations = mapView.annotations(in: mapRect)
                 view?.visibleItems = visannotations
+                print("5 new visible \(visannotations.count)")
             }
 
 //            var mapRect = mapView.visibleMapRect
@@ -165,7 +166,7 @@ extension Map {
 //            let visannotations = mapView.annotations(in: mapRect)
 //            view?.visibleItems = visannotations
             
-            print("5 new visible \(visannotations.count)")
+//            print("5 new visible \(visannotations.count)")
         }
 
         private func updateSelectableMapFeatures(on mapView: MKMapView, from previousView: Map?, to newView: Map) {
