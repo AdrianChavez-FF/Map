@@ -153,12 +153,17 @@ extension Map {
             }
             DispatchQueue.main.async { [self] in
                 mapView.layoutMargins = UIEdgeInsets(top: 0, left: 0, bottom: view?.bottomPartOfMapObscured ?? 0.0, right: 0)
+                
+                var mapRect = mapView.visibleMapRect
+                
+                let visannotations = mapView.annotations(in: mapRect)
+                view?.visibleItems = visannotations
             }
 
-            var mapRect = mapView.visibleMapRect
-            
-            let visannotations = mapView.annotations(in: mapRect)
-            view?.visibleItems = visannotations
+//            var mapRect = mapView.visibleMapRect
+//
+//            let visannotations = mapView.annotations(in: mapRect)
+//            view?.visibleItems = visannotations
             
             print("5 new visible \(visannotations.count)")
         }
