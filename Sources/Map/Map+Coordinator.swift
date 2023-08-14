@@ -403,6 +403,7 @@ extension Map {
             }
             // Assing the selected item ID to the selectedItem binding
             DispatchQueue.main.async {
+                mapView.isUserInteractionEnabled = false
                 self.view?.selectedItems = [id]
             }
         }
