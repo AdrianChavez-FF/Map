@@ -249,13 +249,11 @@ extension Map {
                let newSelectedItem = newView.selectedItems.first,
                let mapAnnotation = annotationContentByID[newSelectedItem] {
                 mapView.selectAnnotation(mapAnnotation.annotation, animated: false)
+                DispatchQueue.main.async { [self] in
+                    mapView.isUserInteractionEnabled = false
+                }
             } else if newView.selectedItems.isEmpty {
                 mapView.selectedAnnotations = []
-            }
-            DispatchQueue.main.async { [self] in
-                
-                mapView.isUserInteractionEnabled = false
-                mapView.isUserInteractionEnabled = true
             }
 
         }
