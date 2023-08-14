@@ -252,6 +252,12 @@ extension Map {
             } else if newView.selectedItems.isEmpty {
                 mapView.selectedAnnotations = []
             }
+            DispatchQueue.main.async { [self] in
+                
+                mapView.isUserInteractionEnabled = false
+                mapView.isUserInteractionEnabled = true
+            }
+
         }
         
         private func updateVisibleItems(on mapView: MKMapView, from previousView: Map?, to newView: Map) {
