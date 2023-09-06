@@ -1,5 +1,6 @@
-Usage notes: 
- Map(
+Here's some usage notes: 
+ ```
+Map(
                 coordinateRegion: $viewModel.region,
                 type: .standard,
                 pointOfInterestFilter: .excludingAll,
@@ -29,6 +30,7 @@ Usage notes:
             .onReceive(viewModel.$region) { value in
                 viewModel.scrolled()
             }
+```
 
 
 
