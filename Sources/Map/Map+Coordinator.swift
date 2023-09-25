@@ -263,6 +263,11 @@ extension Map {
             newView.coordinateRegion.center.latitude != previousView?.coordinateRegion.center.latitude
             else { return }
             // Do nothing, the other side of the binding can't affect what's visible
+            if newView.visibleItems.count == 0 {
+                DispatchQueue.main.async { [self] in
+                    adjustViewToNearestPin(mapView: mapView)
+                }
+            }
         }
 
         private func updatePointOfInterestFilter(on mapView: MKMapView, from previousView: Map?, to newView: Map) {
@@ -452,6 +457,30 @@ extension Map {
                 iconStyle: iconStyle,
                 pointOfInterestCategory: feature.pointOfInterestCategory
             )
+        }
+        
+        func adjustViewToNearestPin(mapView: MKMapView) {
+            let mapBounds = mapView.visibleMapRect
+            let annotations = mapView.annotations
+            
+            var closestAnnotation: MKAnnotation?
+            var shortestDistance: CLLocationDistance = .greatestFiniteMagnitude
+            
+            for annotation in annotations {
+                let mapPoint = MKMapPoint(annotation.coordinate)
+                if !mapBounds.contains(mapPoint) {
+                    let currentDistance = mapView.userLocation.location?.distance(from: CLLocation(latitude: annotation.coordinate.latitude, longitude: annotation.coordinate.longitude)) ?? 0
+                    if currentDistance < shortestDistance {
+                        closestAnnotation = annotation
+                        shortestDistance = currentDistance
+                    }
+                }
+            }
+            
+            if let closestAnnotation = closestAnnotation {
+                let region = MKCoordinateRegion(center: closestAnnotation.coordinate, latitudinalMeters: shortestDistance * 2, longitudinalMeters: shortestDistance * 2)
+                mapView.setRegion(region, animated: true)
+            }
         }
     }
 
