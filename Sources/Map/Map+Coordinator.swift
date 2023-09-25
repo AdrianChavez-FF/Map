@@ -263,7 +263,8 @@ extension Map {
             newView.coordinateRegion.center.latitude != previousView?.coordinateRegion.center.latitude
             else { return }
             // Do nothing, the other side of the binding can't affect what's visible
-            if newView.visibleItems.count == 0 {
+            let annotations = mapView.annotations.filter { !($0 is MKUserLocation) }
+            if newView.visibleItems.count == 0, annotations.count > 0 {
                 DispatchQueue.main.async { [self] in
                     adjustViewToNearestPin(mapView: mapView)
                 }
@@ -461,7 +462,7 @@ extension Map {
         
         func adjustViewToNearestPin(mapView: MKMapView) {
             let mapBounds = mapView.visibleMapRect
-            let annotations = mapView.annotations
+            let annotations = mapView.annotations.filter { !($0 is MKUserLocation) }
             
             var closestAnnotation: MKAnnotation?
             var shortestDistance: CLLocationDistance = .greatestFiniteMagnitude
