@@ -48,7 +48,6 @@ extension Map {
             let animation = context.transaction.animation
             updateAnnotations(on: mapView, from: view, to: newView)
             updateSelectedItem(on: mapView, from: view, to: newView)
-            updateVisibleItems(on: mapView, from: view, to: newView)
             updateCamera(on: mapView, context: context, animated: animation != nil)
             updateSelectableMapFeatures(on: mapView, from: view, to: newView)
             updateInformationVisibility(on: mapView, from: view, to: newView)
@@ -59,6 +58,7 @@ extension Map {
             updateBottomPadding(on: mapView, from: view, to: newView)
             updateType(on: mapView, from: view, to: newView)
             updateUserTracking(on: mapView, from: view, to: newView, animated: animation != nil)
+            updateVisibleItems(on: mapView, from: view, to: newView)
 
             if let key = context.environment.mapKey {
                 MapRegistry[key] = mapView
@@ -462,7 +462,7 @@ extension Map {
             for annotation in annotations {
                 let mapPoint = MKMapPoint(annotation.coordinate)
                 if !mapBounds.contains(mapPoint) {
-                    let currentDistance = distanceBetween(mapView.centerCoordinate, and: annotation.coordinate)
+                    let currentDistance = mapView.userLocation.location?.distance(from: CLLocation(latitude: annotation.coordinate.latitude, longitude: annotation.coordinate.longitude)) ?? 0
                     if currentDistance < shortestDistance {
                         closestAnnotation = annotation
                         shortestDistance = currentDistance
@@ -471,19 +471,9 @@ extension Map {
             }
             
             if let closestAnnotation = closestAnnotation {
-                var region = mapView.region
-                while !mapView.visibleMapRect.contains(MKMapPoint(closestAnnotation.coordinate)) {
-                    region.span.latitudeDelta *= 1.5
-                    region.span.longitudeDelta *= 1.5
-                    mapView.setRegion(region, animated: false)
-                }
+                let region = MKCoordinateRegion(center: closestAnnotation.coordinate, latitudinalMeters: shortestDistance * 2, longitudinalMeters: shortestDistance * 2)
+                mapView.setRegion(region, animated: true)
             }
-        }
-        
-        func distanceBetween(_ coord1: CLLocationCoordinate2D, and coord2: CLLocationCoordinate2D) -> CLLocationDistance {
-            let location1 = CLLocation(latitude: coord1.latitude, longitude: coord1.longitude)
-            let location2 = CLLocation(latitude: coord2.latitude, longitude: coord2.longitude)
-            return location1.distance(from: location2)
         }
     }
 
