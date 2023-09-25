@@ -462,7 +462,7 @@ extension Map {
             for annotation in annotations {
                 let mapPoint = MKMapPoint(annotation.coordinate)
                 if !mapBounds.contains(mapPoint) {
-                    let currentDistance = mapView.userLocation.location?.distance(from: CLLocation(latitude: annotation.coordinate.latitude, longitude: annotation.coordinate.longitude)) ?? 0
+                    let currentDistance = distanceBetween(mapView.centerCoordinate, and: annotation.coordinate)
                     if currentDistance < shortestDistance {
                         closestAnnotation = annotation
                         shortestDistance = currentDistance
@@ -471,9 +471,19 @@ extension Map {
             }
             
             if let closestAnnotation = closestAnnotation {
-                let region = MKCoordinateRegion(center: closestAnnotation.coordinate, latitudinalMeters: shortestDistance * 2, longitudinalMeters: shortestDistance * 2)
-                mapView.setRegion(region, animated: true)
+                var region = mapView.region
+                while !mapView.visibleMapRect.contains(MKMapPoint(closestAnnotation.coordinate)) {
+                    region.span.latitudeDelta *= 1.5
+                    region.span.longitudeDelta *= 1.5
+                    mapView.setRegion(region, animated: false)
+                }
             }
+        }
+        
+        func distanceBetween(_ coord1: CLLocationCoordinate2D, and coord2: CLLocationCoordinate2D) -> CLLocationDistance {
+            let location1 = CLLocation(latitude: coord1.latitude, longitude: coord1.longitude)
+            let location2 = CLLocation(latitude: coord2.latitude, longitude: coord2.longitude)
+            return location1.distance(from: location2)
         }
     }
 
