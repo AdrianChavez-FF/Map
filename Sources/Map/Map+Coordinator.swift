@@ -453,15 +453,13 @@ extension Map {
         }
         
         func adjustViewToNearestPin(mapView: MKMapView) {
-            let mapBounds = mapView.visibleMapRect
             let annotations = mapView.annotations.filter { !($0 is MKUserLocation) }
             
             var closestAnnotation: MKAnnotation?
             var shortestDistance: CLLocationDistance = .greatestFiniteMagnitude
             
             for annotation in annotations {
-                let mapPoint = MKMapPoint(annotation.coordinate)
-                if !mapBounds.contains(mapPoint) {
+                if !mapView.visibleMapRect.contains(MKMapPoint(annotation.coordinate)) {
                     let currentDistance = distanceBetween(mapView.centerCoordinate, and: annotation.coordinate)
                     if currentDistance < shortestDistance {
                         closestAnnotation = annotation
@@ -471,12 +469,18 @@ extension Map {
             }
             
             if let closestAnnotation = closestAnnotation {
-                var region = mapView.region
-                while !mapView.visibleMapRect.contains(MKMapPoint(closestAnnotation.coordinate)) {
-                    region.span.latitudeDelta *= 1.5
-                    region.span.longitudeDelta *= 1.5
-                    mapView.setRegion(region, animated: false)
-                }
+                // Calculate the center point between the current center and the closest pin
+                let newCenter = CLLocationCoordinate2D(
+                    latitude: (mapView.centerCoordinate.latitude + closestAnnotation.coordinate.latitude) / 2,
+                    longitude: (mapView.centerCoordinate.longitude + closestAnnotation.coordinate.longitude) / 2
+                )
+                
+                let latitudeDelta = abs(mapView.centerCoordinate.latitude - closestAnnotation.coordinate.latitude) * 2.2
+                let longitudeDelta = abs(mapView.centerCoordinate.longitude - closestAnnotation.coordinate.longitude) * 2.2
+                
+                let region = MKCoordinateRegion(center: newCenter, span: MKCoordinateSpan(latitudeDelta: latitudeDelta, longitudeDelta: longitudeDelta))
+                
+                mapView.setRegion(region, animated: true)
             }
         }
         
