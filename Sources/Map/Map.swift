@@ -37,6 +37,8 @@ where AnnotationItems.Element: Identifiable, OverlayItems.Element: Identifiable 
     @Binding var visibleItems: Set<AnyHashable>
     /// The amount px of the bottom of the map obscured by overlaid content
     @Binding var bottomPartOfMapObscured: CGFloat
+    /// When the user is actively scrolling/panning the map, we don't want to automatically move the current region, so we have to manage this state
+    @Binding var userIsInteracting: Bool
     let annotationContent: (AnnotationItems.Element) -> MapAnnotation
 
     let overlayItems: OverlayItems
@@ -191,6 +193,7 @@ extension Map {
         annotationItems: AnnotationItems,
         selectedItems: Binding<Set<AnnotationItems.Element.ID>> = .constant([]),
         visibleItems: Binding<Set<AnyHashable>> = .constant([]),
+        userIsInteracting: Binding<Bool> = .constant(false),
         bottomPartOfMapObscured: Binding<CGFloat> = .constant(0.0),
         @MapAnnotationBuilder annotationContent: @escaping (AnnotationItems.Element) -> MapAnnotation,
         overlayItems: OverlayItems,
@@ -220,6 +223,7 @@ extension Map {
         self.overlayItems = overlayItems
         self.overlayContent = overlayContent
         self._selectedFeature = selectedFeature
+        self._userIsInteracting = userIsInteracting
     }
 
     public init(
@@ -233,6 +237,7 @@ extension Map {
         annotationItems: AnnotationItems,
         selectedItems: Binding<Set<AnnotationItems.Element.ID>> = .constant([]),
         visibleItems: Binding<Set<AnyHashable>> = .constant([]),
+        userIsInteracting: Binding<Bool> = .constant(false),
         bottomPartOfMapObscured: Binding<CGFloat> = .constant(0.0),
         @MapAnnotationBuilder annotationContent: @escaping (AnnotationItems.Element) -> MapAnnotation,
         overlayItems: OverlayItems,
@@ -262,6 +267,7 @@ extension Map {
         self._visibleItems = visibleItems
         self._bottomPartOfMapObscured = bottomPartOfMapObscured
         self._selectedFeature = selectedFeature
+        self._userIsInteracting = userIsInteracting
     }
 
 }
@@ -620,6 +626,7 @@ extension Map where OverlayItems == [IdentifiableObject<MKOverlay>] {
         userTrackingMode: Binding<MKUserTrackingMode>? = nil,
         annotationItems: AnnotationItems,
         visibleItems: Binding<Set<AnyHashable>>,
+        userIsInteracting: Binding<Bool> = .constant(false),
         bottomPartOfMapObscured: Binding<CGFloat> = .constant(0.0),
         selectedItems: Binding<Set<AnnotationItems.Element.ID>>,
         @MapAnnotationBuilder annotationContent: @escaping (AnnotationItems.Element) -> MapAnnotation,
@@ -643,6 +650,7 @@ extension Map where OverlayItems == [IdentifiableObject<MKOverlay>] {
             annotationItems: annotationItems,
             selectedItems: selectedItems,
             visibleItems: visibleItems,
+            userIsInteracting: userIsInteracting,
             bottomPartOfMapObscured: bottomPartOfMapObscured,
             annotationContent: annotationContent,
             overlayItems: overlays.map(IdentifiableObject.init),

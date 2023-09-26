@@ -242,9 +242,6 @@ extension Map {
                let newSelectedItem = newView.selectedItems.first,
                let mapAnnotation = annotationContentByID[newSelectedItem] {
                 mapView.selectAnnotation(mapAnnotation.annotation, animated: false)
-//                DispatchQueue.main.async { [self] in
-//                    mapView.isUserInteractionEnabled = false
-//                }
             } else if newView.selectedItems.isEmpty {
                 mapView.selectedAnnotations = []
             }
@@ -256,7 +253,7 @@ extension Map {
             newView.coordinateRegion.center.latitude != previousView?.coordinateRegion.center.latitude
             else { return }
             let annotations = mapView.annotations.filter { !($0 is MKUserLocation) }
-            if newView.visibleItems.count == 0, annotations.count > 0 {
+            if newView.visibleItems.count == 0, annotations.count > 0, !newView.userIsInteracting {
                 DispatchQueue.main.async { [self] in
                     adjustViewToNearestPin(mapView: mapView)
                 }
@@ -401,7 +398,6 @@ extension Map {
             }
             // Assing the selected item ID to the selectedItem binding
             DispatchQueue.main.async {
-//                mapView.isUserInteractionEnabled = false
                 self.view?.selectedItems = [id]
             }
         }
