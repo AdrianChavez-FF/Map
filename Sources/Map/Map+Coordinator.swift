@@ -111,7 +111,11 @@ extension Map {
                     annotationContentByID.removeValue(forKey: item.id)
                 }
             }
-            mapViewDidChangeVisibleRegion(mapView)
+            mapView.layoutMargins = UIEdgeInsets(top: 0, left: 0, bottom: newView.bottomPartOfMapObscured, right: 0)
+            let mapRect = mapView.visibleMapRect
+            let visannotations = mapView.annotations(in: mapRect)
+            view?.visibleItems = visannotations
+            print("6 new visible \(visannotations.count)")
         }
 
         private func updateCamera(on mapView: MKMapView, context: Context, animated: Bool) {
