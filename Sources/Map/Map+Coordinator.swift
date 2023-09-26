@@ -59,6 +59,7 @@ extension Map {
             updateType(on: mapView, from: view, to: newView)
             updateUserTracking(on: mapView, from: view, to: newView, animated: animation != nil)
             updateVisibleItems(on: mapView, from: view, to: newView)
+            updateVisibleUpdateNeeded(on: mapView, from: view, to: newView)
             
             if let key = context.environment.mapKey {
                 MapRegistry[key] = mapView
@@ -257,6 +258,21 @@ extension Map {
                 DispatchQueue.main.async { [self] in
                     adjustViewToNearestPin(mapView: mapView)
                 }
+            }
+        }
+        
+        private func updateVisibleUpdateNeeded(on mapView: MKMapView, from previousView: Map?, to newView: Map) {
+            guard newView.visibleUpdateNeeded else { return }
+            
+            DispatchQueue.main.async { [self] in
+                mapView.layoutMargins = UIEdgeInsets(top: 0, left: 0, bottom: view?.bottomPartOfMapObscured ?? 0.0, right: 0)
+                
+                var mapRect = mapView.visibleMapRect
+                
+                let visannotations = mapView.annotations(in: mapRect)
+                view?.visibleItems = visannotations
+                newView.visibleUpdateNeeded = false
+                print("**newmap 7 new visible: \(visannotations.count)")
             }
         }
         
