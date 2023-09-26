@@ -111,6 +111,7 @@ extension Map {
                     annotationContentByID.removeValue(forKey: item.id)
                 }
             }
+            mapViewDidChangeVisibleRegion(mapView)
         }
 
         private func updateCamera(on mapView: MKMapView, context: Context, animated: Bool) {
