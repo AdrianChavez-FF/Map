@@ -84,7 +84,6 @@ extension Map {
                 changes = newView.annotationItems.difference(from: []) { $0.id == $1.id }
             }
             
-            DispatchQueue.main.async { [self] in
                 for change in changes {
                     switch change {
                     case let .insert(_, item, _):
@@ -116,7 +115,6 @@ extension Map {
                 let visannotations = mapView.annotations(in: mapRect)
                 view?.visibleItems = visannotations
                 print("6 new visible \(visannotations.count)")
-            }
         }
         
         private func updateCamera(on mapView: MKMapView, context: Context, animated: Bool) {
