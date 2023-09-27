@@ -253,8 +253,8 @@ extension Map {
             let annotations = mapView.annotations.filter { !($0 is MKUserLocation) }
             if newView.visibleItems.count == 0, annotations.count > 0, newView.zoomToShowPinsIfNeeded {
                 DispatchQueue.main.async { [self] in
-                    adjustViewToNearestPin(mapView: mapView)
                     newView.zoomToShowPinsIfNeeded = false
+                    adjustViewToNearestPin(mapView: mapView)
                 }
             }
         }
