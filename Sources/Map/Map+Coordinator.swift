@@ -257,9 +257,6 @@ extension Map {
             if newView.visibleItems.count == 0, currVis.count == 0, annotations.count > 0, newView.zoomToShowPinsIfNeeded {
                 newView.zoomToShowPinsIfNeeded = false
                 adjustViewToNearestPin(mapView: mapView)
-            } else {
-                // No need to zoom out now
-                newView.zoomToShowPinsIfNeeded = false
             }
         }
         
