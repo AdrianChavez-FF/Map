@@ -251,9 +251,14 @@ extension Map {
         
         private func updateVisibleItems(on mapView: MKMapView, from previousView: Map?, to newView: Map) {
             let annotations = mapView.annotations.filter { !($0 is MKUserLocation) }
-            if newView.visibleItems.count == 0, annotations.count > 0, newView.zoomToShowPinsIfNeeded {
-                newView.zoomToShowPinsIfNeeded = false
-                adjustViewToNearestPin(mapView: mapView)
+            let mapRect = mapView.visibleMapRect
+            let currVis = mapView.annotations(in: mapRect).filter { !($0 is MKUserLocation) }
+            print("**newmap updatevisitems new visible \(currVis.count)")
+            DispatchQueue.main.async { [self] in
+                if newView.visibleItems.count == 0, currVis.count == 0, annotations.count > 0, newView.zoomToShowPinsIfNeeded {
+                    newView.zoomToShowPinsIfNeeded = false
+                    adjustViewToNearestPin(mapView: mapView)
+                }
             }
         }
         
@@ -263,8 +268,7 @@ extension Map {
             DispatchQueue.main.async { [self] in
                 mapView.layoutMargins = UIEdgeInsets(top: 0, left: 0, bottom: view?.bottomPartOfMapObscured ?? 0.0, right: 0)
                 
-                var mapRect = mapView.visibleMapRect
-                
+                let mapRect = mapView.visibleMapRect
                 let visannotations = mapView.annotations(in: mapRect).filter { !($0 is MKUserLocation) }
                 view?.visibleItems = visannotations
                 newView.visibleUpdateNeeded = false
