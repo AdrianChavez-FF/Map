@@ -249,6 +249,7 @@ extension Map {
         }
         
         private func updateVisibleItems(on mapView: MKMapView, from previousView: Map?, to newView: Map) {
+            guard newView.zoomToShowPinsIfNeeded else { return }
             let annotations = mapView.annotations.filter { !($0 is MKUserLocation) }
             let mapRect = mapView.visibleMapRect
             let currVis = mapView.annotations(in: mapRect).filter { !($0 is MKUserLocation) }
