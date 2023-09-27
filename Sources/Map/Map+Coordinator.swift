@@ -85,33 +85,33 @@ extension Map {
                 changes = newView.annotationItems.difference(from: []) { $0.id == $1.id }
             }
             
-                for change in changes {
-                    switch change {
-                    case let .insert(_, item, _):
-                        guard !annotationContentByID.keys.contains(item.id) else {
-                            assertionFailure("Duplicate annotation item id \(item.id) of \(item) found.")
-                            continue
-                        }
-                        let content = newView.annotationContent(item)
-                        let objectKey = ObjectIdentifier(content.annotation)
-                        guard !annotationContentByObject.keys.contains(objectKey) else {
-                            assertionFailure("Duplicate annotation for content \(content) found!")
-                            continue
-                        }
-                        annotationContentByID[item.id] = content
-                        annotationContentByObject[objectKey] = content
-                        registerAnnotationViewIfNeeded(on: mapView, for: content)
-                        mapView.addAnnotation(content.annotation)
-                    case let .remove(_, item, _):
-                        guard let content = annotationContentByID[item.id] else {
-                            assertionFailure("Missing annotation content for item \(item) encountered.")
-                            continue
-                        }
-                        mapView.removeAnnotation(content.annotation)
-                        annotationContentByObject.removeValue(forKey: ObjectIdentifier(content.annotation))
-                        annotationContentByID.removeValue(forKey: item.id)
+            for change in changes {
+                switch change {
+                case let .insert(_, item, _):
+                    guard !annotationContentByID.keys.contains(item.id) else {
+                        assertionFailure("Duplicate annotation item id \(item.id) of \(item) found.")
+                        continue
                     }
+                    let content = newView.annotationContent(item)
+                    let objectKey = ObjectIdentifier(content.annotation)
+                    guard !annotationContentByObject.keys.contains(objectKey) else {
+                        assertionFailure("Duplicate annotation for content \(content) found!")
+                        continue
+                    }
+                    annotationContentByID[item.id] = content
+                    annotationContentByObject[objectKey] = content
+                    registerAnnotationViewIfNeeded(on: mapView, for: content)
+                    mapView.addAnnotation(content.annotation)
+                case let .remove(_, item, _):
+                    guard let content = annotationContentByID[item.id] else {
+                        assertionFailure("Missing annotation content for item \(item) encountered.")
+                        continue
+                    }
+                    mapView.removeAnnotation(content.annotation)
+                    annotationContentByObject.removeValue(forKey: ObjectIdentifier(content.annotation))
+                    annotationContentByID.removeValue(forKey: item.id)
                 }
+            }
         }
         
         private func updateCamera(on mapView: MKMapView, context: Context, animated: Bool) {
@@ -252,10 +252,8 @@ extension Map {
         private func updateVisibleItems(on mapView: MKMapView, from previousView: Map?, to newView: Map) {
             let annotations = mapView.annotations.filter { !($0 is MKUserLocation) }
             if newView.visibleItems.count == 0, annotations.count > 0, newView.zoomToShowPinsIfNeeded {
-                DispatchQueue.main.async { [self] in
-                    newView.zoomToShowPinsIfNeeded = false
-                    adjustViewToNearestPin(mapView: mapView)
-                }
+                newView.zoomToShowPinsIfNeeded = false
+                adjustViewToNearestPin(mapView: mapView)
             }
         }
         
