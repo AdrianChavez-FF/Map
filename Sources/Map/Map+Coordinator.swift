@@ -157,7 +157,7 @@ extension Map {
                 
                 var mapRect = mapView.visibleMapRect
                 
-                let visannotations = mapView.annotations(in: mapRect)
+                let visannotations = mapView.annotations(in: mapRect).filter { !($0 is MKUserLocation) }
                 view?.visibleItems = visannotations
                 print("**newmap 5 new visible: \(visannotations.count)")
             }
@@ -269,7 +269,7 @@ extension Map {
                 
                 var mapRect = mapView.visibleMapRect
                 
-                let visannotations = mapView.annotations(in: mapRect)
+                let visannotations = mapView.annotations(in: mapRect).filter { !($0 is MKUserLocation) }
                 view?.visibleItems = visannotations
                 newView.visibleUpdateNeeded = false
                 print("**newmap 7 new visible: \(visannotations.count)")
@@ -343,7 +343,7 @@ extension Map {
             var mapRect = mapView.visibleMapRect
             //            topHalfMapRect.size.height = topHalfMapRect.size.height - (topHalfMapRect.size.height * paddingRatio)
             
-            let visannotations = mapView.annotations(in: mapRect)
+            let visannotations = mapView.annotations(in: mapRect).filter { !($0 is MKUserLocation) }
             view?.visibleItems = visannotations
             
             print("4 new visible \(visannotations.count)")
