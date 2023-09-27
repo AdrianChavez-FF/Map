@@ -250,11 +250,11 @@ extension Map {
         }
         
         private func updateVisibleItems(on mapView: MKMapView, from previousView: Map?, to newView: Map) {
-            guard newView.visibleItems.count != previousView?.visibleItems.count else { return }
             let annotations = mapView.annotations.filter { !($0 is MKUserLocation) }
             if newView.visibleItems.count == 0, annotations.count > 0, newView.zoomToShowPinsIfNeeded {
                 DispatchQueue.main.async { [self] in
                     adjustViewToNearestPin(mapView: mapView)
+                    newView.zoomToShowPinsIfNeeded = false
                 }
             }
         }
