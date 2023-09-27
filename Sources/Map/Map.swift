@@ -45,6 +45,7 @@ where AnnotationItems.Element: Identifiable, OverlayItems.Element: Identifiable 
 
     let overlayItems: OverlayItems
     let overlayContent: (OverlayItems.Element) -> MapOverlay
+    var alreadyZooming = false
 
     @Binding var selectedFeature: MapFeatureAnnotation?
 }
